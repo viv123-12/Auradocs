@@ -6,7 +6,7 @@ public class RandomStringGenerationService()
     private const string Upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private const string Lower = "abcdefghijklmnopqrstuvwxyz";
     private const string Digits = "0123456789";
-    private const string Special = "!@#$%^&*()-_=+[]{}<>?";
+    private const string Special = "- _ . ~";
 
     public static string GenerateRandomString(int length = 12)
     {
