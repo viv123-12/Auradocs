@@ -1,0 +1,96 @@
+/* You can add global styles to this file, and also import other style files */
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body, #App{
+    height: 100vh;
+    display: block;
+    font-family: 'Roboto', sans-serif;
+}
+/* 1️⃣ Remove editable area borders completely */
+.ck.ck-editor__main > .ck-editor__editable {
+  border: none !important;
+}
+
+/* 2️⃣ Remove focus border (this is the blue line) */
+.ck.ck-editor__main > .ck-editor__editable.ck-focused {
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* 3️⃣ Remove editor wrapper focus styles */
+.ck.ck-editor.ck-focused {
+  outline: none !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+/* 4️⃣ Remove toolbar border (bottom line) */
+.ck.ck-toolbar {
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* 5️⃣ Absolute last-resort (safe) */
+.ck * {
+  outline: none !important;
+}
+
+.ck-powered-by-balloon
+{
+    display: none !important;
+}
+
+@font-face {
+    font-family: 'Roboto';
+    src: url('./assets/fonts/Roboto-Thin.ttf');
+    font-weight: 100;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Roboto';
+    src: url('./assets/fonts/Roboto-ExtraLight.ttf');
+    font-weight: 200;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Roboto';
+    src: url('./assets/fonts/Roboto-Light.ttf');
+    font-weight: 200;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Roboto';
+    src: url('./assets/fonts/Roboto-Regular.ttf');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+@font-face {
+    font-family: 'Roboto';
+    src: url('./assets/fonts/Roboto-Medium.ttf');
+    font-weight: 500;
+    font-style: normal;
+}
+
+
+@font-face {
+    font-family: 'Roboto';
+    src: url('./assets/fonts/Roboto-SemiBold.ttf');
+    font-weight: 600;
+    font-style: normal;
+}
+
+
+@font-face {
+    font-family: 'Roboto';
+    src: url('./assets/fonts/Roboto-Bold.ttf');
+    font-weight: 700;
+    font-style: normal;
+}

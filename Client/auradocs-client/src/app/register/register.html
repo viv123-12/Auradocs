@@ -1,0 +1,67 @@
+<div class="register-page-container">
+    <div class="register-form-container">
+        <div class="register-form-wrapper">
+            <div class="logo-container"><div class="logo"></div></div>
+            <div class="register-title-description">
+                <h1>Register to your Account</h1>
+                <p>see what is going on with your business</p>
+            </div>
+            <div class="register-form">
+                <div class="seperator"></div>
+                <div>
+                    <form [formGroup]="registerForm">
+                        <div class="account-type-toogle input-container">
+                            <app-switch [leftLabel]="modesOfRegistration[0]" [rightLabel]="modesOfRegistration[1]" (_valueChanged)="onToogleValuechange($event)"></app-switch>
+                        </div>
+                        <div class="input-container" *ngIf="!isOrganization">
+                            <label for="email-textbox">Email</label>
+                            <input 
+                            type="text"
+                            formControlName="email"
+                            placeholder="Email*"
+                            id="email-textbox"
+                            >
+                            <div class="error-text" *ngIf="f.email.invalid && f.email.touched">email field is incorrect</div>
+                        </div>
+
+                        <div class="input-container" *ngIf="isOrganization">
+                            <label for="organizationId-textbox">Organization Id</label>
+                            <input 
+                            type="text"
+                            formControlName="organizationId"
+                            placeholder="organizationId*"
+                            id="organizationId-textbox"
+                            >
+                            <div class="error-text" *ngIf="f.organizationId.invalid && f.organizationId.touched">organizationid field is incorrect*</div>
+                        </div>
+
+                        <div class="input-container">
+                            <label for="phoneNumber-textbox">Phone Number</label>
+                            <input 
+                            type="text"
+                            formControlName="phoneNumber"
+                            placeholder="phoneNumber*"
+                            id="phoneNumber-textbox"
+                            >
+                            <div class="error-text" *ngIf="f.phoneNumber.invalid && f.phoneNumber.touched">password field is incorrect*</div>
+                        </div>
+
+                        <div class="input-container" >
+                            <label for="domain-dropdown">Domain</label>
+                            <app-dropdown [dropdownOptions]="domainDropDown" [selectedValue]="selectedDomain" (dropdownValueChanged)="onDomainDropDownChange($event)"></app-dropdown>
+                        </div>
+
+                        <div class="input-container">
+                            <label for="practiceArea-dropdown">Practice Area</label>
+                            <app-dropdown [dropdownOptions]="practiceArea" [selectedValue]="selectedPracticeArea" (dropdownValueChanged)="onDomainPracticeDropDownChange($event)"></app-dropdown>
+                        </div>                        
+
+                        <div class="register-submit-btn-continer" [class.disabled]="registerForm.invalid" (click)="onFormSubmission()">
+                            <button [disabled]="registerForm.invalid" class="register-submit-btn" >register</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

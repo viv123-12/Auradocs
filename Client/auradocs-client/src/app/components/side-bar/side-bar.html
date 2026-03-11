@@ -1,0 +1,20 @@
+<div class="main-sidebar-container">
+    <div class="profile-container">
+        <div class="profile-wrapper">
+            <div class="profile-picture"><img src="" alt=""></div>
+            <div class="profile-details"><span class="title">Test Title</span><span class="description">test description</span></div>
+        </div>
+    </div>
+    <div class="sidebar-options-container">
+        <ul class="sidebar-options-wrapper">
+            <a *ngFor="let item of sideBarItems; let i=index" class="list-option" [routerLink]="sidebarRouterLinks[i]" (click)="onClick(i)" [class.active-option]="selectedIndex == i" #sideNavigationAnchor>{{item}}</a>
+        </ul>
+    </div>
+    <div class="seperator"></div>
+    <div class="sidebar-footer">
+        <ul>
+            <a class="list-option" *ngIf="auth.isLoggedIn" (click)="onClickLogout()">Logout</a>
+            <a class="list-option" >Dark Mode</a>
+        </ul>
+    </div>
+</div>

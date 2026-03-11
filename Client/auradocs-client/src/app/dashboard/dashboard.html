@@ -1,0 +1,28 @@
+<div class="dashboard-page-container">
+    <div class="quick-actions-container">
+        <div class="quick-action" *ngFor="let quickaction of quickActionsList" (click)="onQuickActionClick(quickaction)"> {{quickaction}} </div>
+    </div>
+    <div class="action-charts-container">
+        <div class="chart-card">
+            <canvas id="canvas-seven-days" class="canvas" #canvasSeven></canvas>
+        </div>
+        <div class="chart-card">
+            <canvas id="canvas-thirty-days" class="canvas" #canvasThirty></canvas>
+        </div>
+    </div>
+    <div class="recent-activities-container">
+        <div class="recent-activities-card">
+            <table class="">
+                <tr class="table-row">
+                    <th class="table-header" *ngFor="let header of tableHeadersList"> {{header}} </th>
+                </tr>
+                <tr class="table-row" *ngFor="let content of tableContentList">
+                    <td class="table-column">{{content[0]}}</td>
+                    <td class="table-column">{{content[1]}}</td>
+                    <td class="table-column">{{content[2]}}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <app-chatbot></app-chatbot>
+</div>

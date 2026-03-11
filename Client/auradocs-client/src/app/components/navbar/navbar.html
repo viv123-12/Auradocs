@@ -1,0 +1,13 @@
+<nav class="main-navbar">
+    <ul class="navbar">
+        <div class="left-nav">
+            <a class="nav-item" [routerLink]="letfNavRoutes[i]" *ngFor="let leftNav of leftNavItems; let i=index">{{ leftNav }}</a>
+        </div>
+        <div class="right-nav" *ngIf="!auth.isLoggedIn">
+            <a class="nav-item" [routerLink]="rightNavRoutes[i]" *ngFor="let rightNav of rightNavItems;let i=index">{{ rightNav }}</a>
+        </div>
+        <div class="right-nav" *ngIf="auth.isLoggedIn">
+            <a class="nav-item" (click)="onClickLogout()">{{ 'Logout' }}</a>
+        </div>
+    </ul>
+</nav>

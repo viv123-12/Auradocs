@@ -1,0 +1,119 @@
+@use '../../styles/variables.scss';
+.register-page-container{
+    height: calc(100% - 65px);
+    width: 100%;
+    overflow: auto;
+    .poster-container{
+        background-image: url('../../assets/LoginPage/loginpage-poster.jpg');
+        background-position: center;
+        background-size: cover;
+        background-repeat: no-repeat;
+    }
+    .register-form-container{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        position: relative;
+        .register-form-wrapper{
+            width: 30%;
+            padding: 2rem;
+            margin-top: 50px;
+            border-radius: 24px;
+            box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+            .register-title-description{
+                margin-bottom: 2rem;
+            }
+            .register-form{
+                .input-container{
+                    margin-bottom: 20px;
+                    .register-actions
+                    {
+                        display: flex;
+                        justify-content: space-between;
+                        height: 30px;
+                        align-items: center;
+                        .rememberMe-checkbox-label{
+                            display: flex;
+                            align-items: center;
+                            .rememberMe-checkbox{
+                                margin-right: 5px;
+                                accent-color: variables.$primary-clr;
+                                height: 16px;
+                                width: 16px;
+                            }
+                        }
+                        .forgot-password{
+                            color: variables.$light-text-clr;
+                        }
+                    }
+                }
+                .account-type-toogle{
+                    width: 100%;
+                    display: flex;
+                    justify-content: center;
+                }
+            }
+            .register-submit-btn-continer{
+                width: 100%;
+                background-color: variables.$primary-clr;
+                padding: 20px;
+                width: 100%;
+                height: 50px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 10px;
+                cursor: pointer;
+                margin-top: 2rem;
+                .register-submit-btn{
+                    border: none;
+                    background-color: variables.$primary-clr;
+                    color: variables.$primary-text-clr;
+                    font-size: 16px;
+                    font-weight: 500;
+                }
+            }
+            .disabled {
+                opacity: 0.7;
+                pointer-events: none;
+            }
+        }
+        .register-form-footer{
+            bottom: 0;
+            position: absolute;
+            height: 8em;
+            display: flex;
+            align-items: center;
+            .footer-text{
+                margin:0 10px;
+            }
+        }
+    }
+}
+
+input{
+    border-radius: 4px;
+    width: 100%;
+    height: 3rem;
+    padding: 8px;
+    border: none;
+    border: 1px solid black;
+}
+h1{
+    font-size: 24px;
+}
+p{
+    font-size: 14px;
+}
+label{
+    color: variables.$input-label-clr;
+}
+.error-text{
+    color: variables.$danger-clr;
+    font-size: 12px;
+}
+.blur{
+    color: variables.$light-text-clr;
+    cursor: pointer;
+}

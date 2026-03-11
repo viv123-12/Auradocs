@@ -1,0 +1,70 @@
+<div class="login-page-container">
+    <div class="poster-container"></div>
+    <div class="login-form-container">
+        <div class="login-form-wrapper">
+            <div class="logo-container"><div class="logo"></div></div>
+            <div class="login-title-description">
+                <h1>Login to your Account</h1>
+                <p>see what is going on with your business</p>
+            </div>
+            <div class="login-form">
+                <div class="google-login-btn-container">
+                    <div class="google-logo"></div>
+                    <span>Continue with Google</span>
+                </div>
+                <div class="seperator"></div>
+                <div>
+                    <form [formGroup]="loginForm">
+                        <div class="account-type-toogle input-container">
+                            <app-switch [leftLabel]="userLoginTypes[0]" [rightLabel]="userLoginTypes[1]" (_valueChanged)="onToogleValuechange($event)"></app-switch>
+                        </div>
+                        <div class="input-container" *ngIf="!isOrganizationUserType">
+                            <label for="email-textbox">Email*</label>
+                            <input 
+                            type="text"
+                            formControlName="email"
+                            placeholder="Email"
+                            id="email-textbox"
+                            >
+                            <div class="error-text" *ngIf="f.email.invalid && f.email.touched">Enter valid email</div>
+                        </div>
+                        <div class="input-container" *ngIf="isOrganizationUserType">
+                            <label for="organizationId-textbox">Organization Id*</label>
+                            <input 
+                            type="text"
+                            formControlName="organizationId"
+                            placeholder="Organization Id*"
+                            id="organizationId-textbox"
+                            >
+                            <div class="error-text" *ngIf="f.organizationId.invalid && f.organizationId.touched">Enter valid organization Id</div>
+                        </div>
+                        <div class="input-container">
+                            <label for="password-textbox">Password</label>
+                            <input 
+                            type="password"
+                            formControlName="password"
+                            placeholder="Password*"
+                            id="password-textbox"
+                            >
+                            <div class="error-text" *ngIf="f.password.invalid && f.password.touched">Enter valid password</div>
+                            <div class="login-actions">
+                                <label class="rememberMe-checkbox-label"><input type="checkbox" formControlName="rememberMe" class="rememberMe-checkbox">Remember Me </label>
+                                <div class="blur" (click)="onClickForgotPassword()">forgot password?</div>
+                            </div>
+                        </div>
+
+                        <div class="login-submit-btn-continer" [class.disabled]="loginForm.invalid" (click)="onFormSubmission()">
+                            <button type="submit" [disabled]="loginForm.invalid" class="login-submit-btn">Login</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="login-form-footer">
+            <div class="footer-details">
+                <span class="footer-text">Not registered Yet?</span>
+                <span class="blur footer-text" (click)="onClickCreateAccount()">Create an account</span>
+            </div>
+        </div>
+    </div>
+</div>

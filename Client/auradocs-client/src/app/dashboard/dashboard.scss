@@ -1,0 +1,78 @@
+@use '../../styles/variables.scss';
+.dashboard-page-container{
+    height: calc( 100% - 65px);
+    width: 100%;
+    padding: 30px;
+    overflow: auto;
+    .quick-actions-container{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        .quick-action{
+            min-width: 100px;
+            min-height: 100px;
+            max-width: 200px;
+            max-height: 100px;
+            text-align: center;
+            place-content: center;
+            box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+            padding: 2rem;
+            transform: 0.2s;
+            font-weight: bold;
+            border-radius: 8px;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+        .quick-action:hover{
+            transform: scale(1.05)
+        }
+    }
+    .action-charts-container{
+        margin-top: 4rem;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4rem;
+        .chart-card{
+            border-radius: 8px;
+            box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+            padding: 1rem;
+        }
+    }
+    .recent-activities-container{
+        margin-top: 4rem;
+        .recent-activities-card{
+            border-radius: 8px;
+            box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+            padding: 1rem;
+            table{
+                width: 100%;
+                border-collapse: collapse;
+                font-size: 14px;
+                background-color: variables.$table-bkg-clr;
+                tr.table-row{
+                    height: 2rem;
+                    border: none;
+                    border-bottom: 1px solid variables.$table-row-border-clr;
+                }
+                th.table-header{
+                    margin-bottom: 1rem ;
+                    text-align: center;
+                    text-align: left;
+                    padding: 12px 14px;
+                    background-color: variables.$table-header-bkg-clr;
+                    color: variables.$table-header-clr;
+                    font-weight: 600;
+                    border-bottom: 1px solid variables.$table-data-border-clr;
+                }
+                td.table-column{
+                    padding: 10px 14px;
+                    border-bottom: 1px solid variables.$table-data-border-clr;
+                    color: variables.$table-clr;
+                }
+                .table-row:hover{
+                    background-color: variables.$table-rows-hover-clr;
+                }
+            }
+        }
+    }
+}

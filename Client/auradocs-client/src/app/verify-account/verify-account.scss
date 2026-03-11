@@ -1,0 +1,112 @@
+.verify-account-container{
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+    align-items: center;
+    justify-content: center;
+    .verify-account-form-wrapper{
+        height: auto;
+        max-width: 500px;
+        height: auto;
+        width: 23rem;
+        max-width: 500px;
+        padding: 30px;
+        box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+        border-radius: 24px;
+        .verify-account-header{
+            width: 100%;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            h1{
+                font-size: 24px;
+                font-weight: 600;
+                margin-bottom: 0.85rem;
+            }
+            p{
+                font-size: 14px;
+                color:hsl(215.4 16.3% 46.9%);
+            }
+        }
+        .verfiy-account-form{
+            width: 100%;
+            .account-type-toogle{
+                display: flex;
+                width: 100%;
+                align-items: center;
+                justify-content: center;
+                margin-bottom: 1.5rem;
+            }
+            .input-container{
+                display: flex;
+                flex-direction: column;
+                margin-bottom: 0.9rem;
+                .error-text{
+                    color: red;
+                    font-size: 12px;
+                }
+                label{
+                    margin-bottom: 0.2rem;
+                    font-weight: 00;
+                }
+                input{
+                    width: 100%;
+                    line-height: 1.4rem;
+                    font-size: 0.875rem;
+                    height: 2rem;
+                    padding: 10px;
+                    border-radius: 4px;
+                    border: none;
+                    border: 1px solid hsl(214.3 31.8% 91.4%);
+                }
+                input:focus{
+                    outline: hsl(214.3 31.8% 91.4%) ;
+                }
+            }
+        }
+    }
+    .verify-link-instruction-container{
+        height: auto;
+        width: 23rem;
+        max-width: 500px;
+        padding: 30px;
+        box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+        .instruction-header{
+            width: 100%;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            .instruction-header-logo-wrapper{
+                width: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-bottom: 0.5rem;
+                .instruction-header-bg{
+                    height: 50px;
+                    width: 50px;
+                    background-color:oklch(96.2% 0.044 156.743);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    border-radius: 50%;
+                }
+            }
+            h2{
+                font-size: 1rem;
+                font-weight: 600;
+                margin-bottom: 0.85rem;
+            }
+            p{
+                color:hsl(215.4 16.3% 46.9%);
+                margin-block: 1rem;
+            }
+            .back-button-container{
+                margin-top: 1rem;
+            }
+        }
+    }
+}
+
+.disabled {
+    opacity: 0.7;
+    pointer-events: none;
+}

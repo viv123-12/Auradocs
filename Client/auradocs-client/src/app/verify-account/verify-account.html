@@ -1,0 +1,61 @@
+<div class="verify-account-container">
+    <div class="verify-account-form-wrapper" *ngIf="!isCurrentViewVerifyAccount">
+        <div class="verify-account-header">
+            <h1>Verify your account</h1>
+            <p>Enter your email or organization ID to continue</p>
+        </div>
+        <div class="verfiy-account-form">
+            <form [formGroup]="verifyAccountFormGroup">
+                <div class="account-type-toogle input-container">
+                    <app-switch [leftLabel]="modesOfRegistration[0]" [rightLabel]="modesOfRegistration[1]" (_valueChanged)="onToogleValuechange($event)"></app-switch>
+                </div>
+                <div class="input-container" *ngIf="!isOrganizationUserType">
+                    <label for="email-textbox">Email</label>
+                    <input 
+                    type="text"
+                    formControlName="email"
+                    placeholder="Email*"
+                    id="email-textbox"
+                    >
+                    <div class="error-text" *ngIf="form['email'].invalid && form['email'].touched">email field is incorrect</div>
+                </div>
+                <div class="input-container" *ngIf="isOrganizationUserType">
+                    <label for="organization-id-textbox">OrganizationId</label>
+                    <input 
+                    type="text"
+                    formControlName="organizationId"
+                    placeholder="Organization Id*"
+                    id="organization-id-textbox"
+                    >
+                    <div class="error-text" *ngIf="form['organizationId'].invalid && form['organizationId'].touched">organizationId field is incorrect</div>
+                </div>
+                <div (click)="onClickVerifyBtn()" [class.disabled]="verifyAccountFormGroup.invalid">
+                    <app-button [btnClass]="verifySendLinkBtnClass" [buttonTitle]="verifySendLinkBtnTitle" [buttonInnerText]="verifySendLinkBtnInnerText" [disabled]="verifyAccountFormGroup.invalid"></app-button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="verify-link-instruction-container" *ngIf="isCurrentViewVerifyAccount">
+        <div class="instruction-header">
+            <div class="instruction-header-logo-wrapper">
+                <div class="instruction-header-bg"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-check text-green-600" aria-hidden="true" data-source-pos="79:16-79:69" data-source-name="CheckCircle2"><circle cx="12" cy="12" r="10"></circle><path d="m9 12 2 2 4-4"></path></svg></div>
+            </div>
+            <h1 class="instruction-header">Check your inbox</h1>
+            <p class="instruction-desc">
+            If the {{ selectedUserType === 'Individual' ? 'email' : 'phone number' }} exists,
+            we’ve sent a secure link to
+            </p>
+            <div class="instruction-body">
+            <h2>
+                {{ selectedUserType === 'Individual'
+                ? verifyAccountFormGroup.get('email')?.value
+                : verifyAccountFormGroup.get('phone')?.value }}
+            </h2>
+            </div>
+            <p>The link will expire in a few minutes. Please open it to continue.</p>
+            <div class="back-button-container" (click)="onClickBackBtn()">
+                <app-button [btnClass]="backBtnClass" [buttonTitle]="backBtnTitle" [buttonInnerText]="backBtnInnerText"></app-button>
+            </div>
+        </div>
+    </div>
+</div>

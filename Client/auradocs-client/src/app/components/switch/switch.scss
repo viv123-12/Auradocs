@@ -1,0 +1,20 @@
+.switch-container{
+    display: flex;
+    .switch-button-box{
+        width: 40px;
+        height: 18px;
+        border: 1px solid #D1D5DB;
+        border-radius: 10px;
+        position: relative;
+        background-color: #E5E7EB;
+        margin: 0 8px;
+        .switch-point{
+            width: 17px;
+            height: 17px;
+            border-radius: 50%;
+            background-color: #222;
+            position: absolute;
+            transition: 0.3s;
+        }
+    }
+}

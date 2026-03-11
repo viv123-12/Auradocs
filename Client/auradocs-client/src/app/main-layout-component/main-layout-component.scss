@@ -1,0 +1,20 @@
+.main-layout-container{
+    height: calc(100% - 65px);
+    .central-page{
+        display: flex;
+        height: 100%;
+        width: 100%;
+        .mainpage-btn-container{
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+        }
+    }
+}
+
+app-dashboard,app-documents,app-document-viewer{
+    width: 100%;
+}
+

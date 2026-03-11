@@ -1,0 +1,142 @@
+@use '../../styles/variables.scss';
+.login-page-container{
+    display: grid;
+    grid-template-columns:1fr 1fr;
+    height: calc(100% - 65px);
+    .poster-container{
+        background-image: url('../../assets/LoginPage/loginpage-poster.jpg');
+        background-position: center;
+        background-size: cover;
+        background-repeat: no-repeat;
+    }
+    .login-form-container{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        position: relative;
+        .login-form-wrapper{
+            width: 50%;
+            padding: 2rem;
+            box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;
+            border-radius: 24px;
+            .login-title-description{
+                margin-bottom: 2rem;
+            }
+            .login-form{
+                .google-login-btn-container{
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    margin: 2rem 0;
+                    height: 45px;
+                    border: 1px solid;
+                    cursor: pointer;
+                    .google-logo{
+                        background-image: url(variables.$loginpag-google-logo-icon);
+                        background-repeat: no-repeat;
+                        background-position: center;
+                        background-size: cover;
+                        height: 24px;
+                        width: 24px;
+                        margin-right: 5px;
+                    }
+                }
+                .google-login-btn-container:hover{
+                    transform: scale(1.01);
+                }
+                .account-type-toogle{
+                    display: flex;
+                    width: 100%;
+                    justify-content: center;
+                }
+                .input-container{
+                    margin-bottom: 20px;
+                    .login-actions
+                    {
+                        display: flex;
+                        justify-content: space-between;
+                        height: 30px;
+                        align-items: center;
+                        .rememberMe-checkbox-label{
+                            display: flex;
+                            align-items: center;
+                            .rememberMe-checkbox{
+                                margin-right: 5px;
+                                accent-color: variables.$primary-clr;
+                                height: 16px;
+                                width: 16px;
+                            }
+                        }
+                        .forgot-password{
+                            color: variables.$light-text-clr;
+                        }
+                    }
+                }
+            }
+            .login-submit-btn-continer{
+                width: 100%;
+                background-color: variables.$primary-clr;
+                padding: 20px;
+                width: 100%;
+                height: 50px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 10px;
+                cursor: pointer;
+                margin-top: 2rem;
+                .login-submit-btn{
+                    border: none;
+                    background-color: variables.$primary-clr;
+                    color: variables.$primary-text-clr;
+                    font-size: 16px;
+                    font-weight: 500;
+                    cursor: pointer;
+                }
+            }
+        }
+        .login-form-footer{
+            bottom: 0;
+            position: absolute;
+            height: 8em;
+            display: flex;
+            align-items: center;
+            .footer-text{
+                margin:0 10px;
+            }
+        }
+    }
+}
+
+input{
+    border-radius: 4px;
+    width: 100%;
+    height: 3rem;
+    padding: 8px;
+    border: none;
+    border: 1px solid black;
+}
+h1{
+    font-size: 24px;
+}
+p{
+    font-size: 14px;
+}
+label{
+    color: variables.$input-label-clr;
+}
+.error-text{
+    color: variables.$danger-clr;
+    font-size: 12px;
+}
+.blur{
+    color: variables.$light-text-clr;
+    cursor: pointer;
+}
+.blur:hover{
+    color:#201a1a;
+}
+.disabled {
+    opacity: 0.7;
+}

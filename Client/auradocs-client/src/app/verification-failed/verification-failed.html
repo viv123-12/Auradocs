@@ -1,0 +1,22 @@
+<div class="verification-failed-container">
+    <div class="header-body-wrapper">
+        <div class="header">
+            <div class="logo">
+                <div class="logo-wrapper">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-triangle-alert text-red-600" aria-hidden="true" data-source-pos="13:14-13:66" data-source-name="AlertTriangle"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"></path><path d="M12 9v4"></path><path d="M12 17h.01"></path></svg>
+                </div>
+            </div>
+            <h2>Verification Failed</h2>
+            <div class="header-notes">
+                We couldn’t verify your request. This may happen if the link is invalid or expired.
+            </div>
+        </div>
+        <div class="body">
+            <div class="reasons-heading">Possible reasons:</div>
+            <ul class="reasons">
+                <li class="reason" *ngFor="let reason of verificationFailureReasons" > {{ reason }}</li>
+            </ul>
+            <app-button [btnClass]="backBtn" [buttonTitle]="backBtnTitle" [buttonInnerText]="backBtnInnerText" (click)="onClickBackBtn()"></app-button>
+        </div>
+    </div>
+</div>

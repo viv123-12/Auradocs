@@ -1,0 +1,67 @@
+@use '../../../styles/variables.scss';
+.dropdown-container{
+    position: relative;
+    height: 100%;
+    .combo-box
+    {
+        width: 100%;
+        height: 100%;
+        border: 1px solid variables.$input-label-clr;
+        padding: 10px;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        span.selected-value{
+            width: 94%;
+            display: inline-block;
+        }
+    }
+    .combo-box::after{
+        content: "";
+        display: inline-block;
+        width: 24px;
+        height: 24px;
+        background-image: url(variables.$dropdown-upward-arrow-icon);
+        background-size: cover; /* or contain */
+        background-repeat: no-repeat;
+        transform: rotate(var(--angle,0deg));
+        transition: transform 0.3s;
+    }
+
+    .list-box{
+        width: 100%;
+        background-color: variables.$listbox-box-clr;
+        border: 1px solid #E5E7EB;
+        border-radius: 6px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+        margin-top:4px;
+        position: absolute;
+        z-index: variables.$dropdown-zindex;
+        max-height: 12rem;
+        overflow: auto;
+        .dropdown-option{
+            padding: 6px;
+        }
+        .dropdown-option:hover {
+            background-color: variables.$listbox-hover-clr; /* soft blue */
+        }
+    }
+}
+
+.dropdown-width{
+    width: 100%;
+}
+
+li{
+    list-style: none;
+}
+
+.dropdown-option {
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.dropdown-option.active {
+  background-color: rgba(0, 122, 255, 0.16);
+}

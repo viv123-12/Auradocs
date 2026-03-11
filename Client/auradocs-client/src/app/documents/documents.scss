@@ -1,0 +1,181 @@
+@use '../../styles/variables.scss';
+.documents-container{
+    overflow: auto;
+    padding: 2rem;
+    height: calc(100vh - 65px);
+    .documents-page-header{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        h1{
+            font-size: 30px;
+            font-weight: 600;
+        }
+        .header-buttons-container{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            
+        }
+    }
+    .filter-container{
+        box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+        padding: 20px;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        margin: 2rem 0;
+        justify-content: space-between;
+        *{
+            width: 200px;
+            height: 50px;
+        }
+        input{
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 4px;
+            border: none;
+            border: 1px solid variables.$input-label-clr;
+        }
+        *:focus{
+            outline: 1px solid lightblue;
+        }
+    }
+    .folders-container{
+        .folder-tiles-container{
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+            .folder-tile{
+                height: 50px;
+                box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+                padding: 2rem;
+                display: flex;
+                align-items: center;
+                font-weight: 500;
+                border-radius: 4px;
+                transition:transform 0.3s;
+                .folder-tile-icon{
+                    mask-image: url(variables.$documents-page-folder-tile-icon);
+                    background-position: center;
+                    background-repeat: no-repeat;
+                    background-size: cover;
+                    background-color: oklch(62.3% 0.214 259.815);;
+                    height: 24px;
+                    width: 24px;
+                    margin-right: 10px;
+                }
+            }
+            .folder-tile:hover{
+                transform: scale(1.05);
+            }
+        }
+        .folder-tiles-not-available{
+            justify-content: center;
+        }
+    }
+    .files-container{
+        margin-top: 30px;
+        .file-tiles-container{
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+            .file-tile{
+                box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+                padding: 20px;
+                border-radius: 4px;
+                display: flex;
+                flex-direction: column;
+                transition: 0.2s;
+                min-width: 350px;
+                .name-container{
+                    width: 100%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: start;
+                    margin-bottom: 1rem;
+                    .file-tile-icon{
+                        mask-image: url(variables.$documents-page-file-tile-icon);
+                        background-position: center;
+                        background-repeat: no-repeat;
+                        background-size: cover;
+                        background-color: oklch(62.3% 0.214 259.815);
+                        height: 24px;
+                        width: 24px;
+                        margin-right: 10px;
+                        display: inline-block;
+                    }
+                }
+
+                .type-auth-status-container{
+                    color: variables.$file-tile-name-auth-status-txt-clr;
+                    .type-auth-status-seperato{
+                        text-align: center;
+                        place-content: center;
+                        width: 1rem;
+                        margin: 1rem;
+                    }
+                }
+
+                .btn-container{
+                    margin-left: auto;
+                    width: fit-content;
+                    margin-top: 10px;
+                    display: flex;
+                    align-items: center;
+                    cursor: pointer;
+                    .icon{
+                        background-position: center;
+                        background-repeat: no-repeat;
+                        background-size: cover;
+                        height: 24px;
+                        width: 24px;
+                        display: inline-block;
+                        margin: 0 10px;
+                        padding: 10px;
+                    }
+                    .view-btn{
+                        background-image: url(variables.$documents-page-view-file-icon);
+                    }
+                    .edit-btn{
+                        background-image: url(variables.$documents-page-edit-file-icon);
+                    }
+                    .share-btn{
+                        background-image: url(variables.$documents-page-share-file-icon);
+                    }
+                    .delete-btn{
+                        mask-image: url(variables.$documents-page-delete-file-icon);
+                        background-color: red;
+                    }
+                    .icon:hover{
+                        background-color: variables.$document-btn-icon-hvr-clr;
+                    }
+                    .delete-btn:hover{
+                        background-color: red;
+                    }
+                }
+            }
+            .file-tile:hover{
+                transform: translateY(-5px);
+            }
+        }
+        .file-tiles-not-available{
+            justify-content: center;
+        }
+    }
+    .not-available{
+        text-align: center;
+        place-content: center;
+        height: 5rem;
+        color: #626a72;
+    }
+}
+
+h2{
+    font-size: 24px;
+    font-weight: 500;           
+}

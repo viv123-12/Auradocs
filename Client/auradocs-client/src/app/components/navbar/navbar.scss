@@ -1,0 +1,29 @@
+@use '../../../styles/variables.scss';
+.navbar{
+    background-color: variables.$nav-bar-bg-clr;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    height: 65px;
+    color: variables.$nav-bar-txt-clr;
+    font-weight: 600;
+    .right-nav, .left-nav{
+        display: flex;
+        a.nav-item{
+            list-style-type: none;
+            margin: 0 30px;
+            cursor: pointer;
+            text-decoration: none;
+            color: variables.$nav-bar-txt-clr;
+        }
+        a.nav-item:hover{
+            color: variables.$primary-text-clr;
+        }
+    }
+    .left-nav{
+        margin-right: auto;
+    }
+    .right-nav{
+        margin-right: 30px;
+    }
+}

@@ -1,0 +1,35 @@
+<div class="dropdown-container">
+
+  <!-- Selected value / combo box -->
+  <div
+    class="combo-box dropdown-width"
+    (click)="openDropDown()"
+    role="button"
+    tabindex="0"
+    aria-haspopup="listbox"
+    aria-expanded="{{ isListBoxOpen }}"
+  >
+    <span class="selected-value">
+      {{ dropdownOptions?.length ? dropdownOptions[selectedOption].label : 'Select' }}
+    </span>
+
+    <span class="dropdown-arrow"></span>
+  </div>
+
+  <!-- Options -->
+  <div class="list-box" *ngIf="isListBoxOpen">
+    <ul role="listbox">
+      <li
+        class="dropdown-option"
+        *ngFor="let option of dropdownOptions; let i = index"
+        [class.active]="i === selectedOption"
+        (click)="selectOption(i)"
+        role="option"
+        [attr.aria-selected]="i === selectedOption"
+      >
+        {{ option.label }}
+      </li>
+    </ul>
+  </div>
+
+</div>

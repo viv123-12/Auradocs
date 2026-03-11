@@ -1,0 +1,24 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "auradocs_api", "auradocs_api\auradocs_api.csproj", "{BF3239DC-F2CB-E700-F9A9-3E0FE597F8BE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BF3239DC-F2CB-E700-F9A9-3E0FE597F8BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF3239DC-F2CB-E700-F9A9-3E0FE597F8BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF3239DC-F2CB-E700-F9A9-3E0FE597F8BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF3239DC-F2CB-E700-F9A9-3E0FE597F8BE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {383D3B6F-A357-4880-97DB-516D82DF82D4}
+	EndGlobalSection
+EndGlobal

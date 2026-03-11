@@ -1,0 +1,100 @@
+@use '../../styles/variables.scss';
+.document-viewer-container{
+    width: 100%;
+    height: calc(100% - 65px );
+    .document-viewer-header{
+        height: 56px;
+        background: #fff;
+        border-bottom: 1px solid #e5e7eb;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 16px;
+        background-color: #fff;
+        .document-header-wrapper{
+            display: flex;
+            align-items: center;
+
+            h1.document-header{
+                font-size: 24px;
+                margin-left: 1rem;
+            }
+            .editable-title {
+                font-size: 32px;
+                font-weight: 700;
+                border: none;
+                outline: none;
+                cursor: text;
+            }
+
+            .editable-title:focus {
+                outline: none;
+            }
+        }
+        .document-header-button-wrapper{
+            display: flex;
+            gap: 10px;
+        }
+    }
+    .document-viewer-body{
+        height: calc( 100% - 56px );
+        display: grid;
+        grid-template-columns: 200px 3fr 1fr;
+        .document-viewer-body-action-bar
+        {
+            display: flex;
+            flex-direction: column;
+            background-color: #fff;
+            align-items: center;
+            height: 100%;
+            border-right: 1px solid #e5e7eb;
+            padding: 10px;
+        }
+        .document-preview-cotainer{
+            background: #ddd;
+            position: relative;
+            min-height: 100%;
+            overflow-y: auto;
+            .doc-canvas{
+                background: #fff;
+                border-radius: 4px;
+                box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+                color: var(--muted);
+                margin: 20px;
+                margin-bottom: 0;
+                min-height: 95%;
+            }
+        }
+        .document-metadata-container{
+            height: 100%;
+            background: #ffffff;
+            border-left: 1px solid #e5e7eb;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            .document-metadata-header{
+                width: 100%;
+                display: flex;
+                height: 44px;
+                align-items: center;
+                justify-content: center;
+                border-bottom: 1px solid #e5e7eb;
+                .md-header
+                {
+                    display: flex;
+                    width: 100%;
+                    height: 100%;
+                    justify-content:center;
+                    align-items: center;
+                    cursor: pointer;
+                }
+                .md-header:hover{
+                    background-color: #f3f4f6;
+                }
+            }
+            .document-metadata-body{
+                height: calc(100% - 44px);
+            }
+        }
+    }
+}

@@ -1,0 +1,35 @@
+<div class="documents-container">
+    <div class="documents-page-header">
+        <h1>{{DocumentsSectionHeading}}</h1>
+        <div class="header-buttons-container">
+            <app-button [btnClass]="newBtnClass" [iconClass]="newBtnIconClass" [isIcon]="true" [buttonTitle]="newBtnTitle" [buttonInnerText]="newBtnTitle" (click)="createNewDocument()"></app-button>
+            <app-button [btnClass]="uploadBtnClass" [iconClass]="uploadBtnIconClass" [isIcon]="true" [buttonTitle]="uploadTitle" [buttonInnerText]="uploadTitle"></app-button>
+            <app-button [btnClass]="newFolderBtnClass" [buttonTitle]="newFolderTitle" [isIcon]="true" [buttonInnerText]="newFolderTitle" (click)="createNewFolder()"></app-button>
+        </div>
+    </div>
+    <div class="filter-container">
+        <input type="text" [placeholder]="searchDocumentPlaceHolder">
+        <app-dropdown [dropdownOptions]="docTypeDDList" [selectedValue]="docTypeDDLabel"></app-dropdown>
+        <app-dropdown [dropdownOptions]="statusTypeDDList" [selectedValue]="docStatusDDLabel"></app-dropdown>
+        <app-dropdown [dropdownOptions]="OwnerTypeDDList" [selectedValue]="docOwnerDDLabel"></app-dropdown>
+        <input type="date">
+    </div>
+    <div class="folders-container">
+        <h2>{{myFoldersSectionHeader}}</h2>
+        <div class="folder-tiles-container" [class.folder-tiles-not-available]="folderList.length == 0">
+            <div class="folder-tile" *ngFor="let folder of folderList"><span class="folder-tile-icon"></span>{{folder}}</div>
+            <div *ngIf="folderList.length == 0" class="not-available"> No Folders found!!</div>
+        </div>
+    </div>
+    <div class="files-container">
+        <h2>{{myDocumentsSectionHeader}}</h2>
+        <div class="file-tiles-container" [class.file-tiles-not-available]="documentsList.length == 0">
+            <div class="file-tile" *ngFor="let documents of documentsList;let i=index">
+                <div class="name-container"><span class="file-tile-icon"></span>{{documents}}</div>
+                <div class="type-auth-status-container"><span>{{documentsArray[i][0]}}</span><span class="type-auth-status-seperator">.</span><span>{{documentsArray[i][1]}}</span><span>.</span><span>{{documentsArray[i][2]}}</span></div>
+                <div class="btn-container"><span class="view-btn icon"></span> <span class="edit-btn icon"></span><span class="share-btn icon"></span> <span class="delete-btn icon"></span></div>
+            </div>
+            <div *ngIf="documentsList.length == 0" class="not-available"> No Documents found!!</div>
+        </div>
+    </div>
+</div>

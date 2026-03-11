@@ -1,0 +1,34 @@
+<div class="document-viewer-container">
+    <div class="document-viewer-header">
+        <div class="document-header-wrapper">
+            <app-button [btnClass]="backBtnClass" [buttonTitle]="backBtnTitle" [buttonInnerText]="backBtnInnerText" (click)="onBackButtonClick()"></app-button>
+            <h1 class="document-header editable-title" contenteditable="true" spellcheck="false" (input)="onTitleChange($event)">{{documentTitle}}</h1>
+        </div>
+        <div class="document-header-button-wrapper">
+            <app-button [btnClass]="duplicateBtnClass" [buttonTitle]="duplicateBtnTitle" [buttonInnerText]="duplicateBtnInnerText" (click)="onDuplicateBtnClicked()"></app-button>
+            <app-button [btnClass]="saveBtnClass" [buttonTitle]="saveBtnTitle" [buttonInnerText]="saveBtnInnerText" (click)="onSaveBtnClicked()"></app-button>
+            <app-button [btnClass]="shareBtnClass" [buttonTitle]="shareBtnTitle" [buttonInnerText]="shareBtnInnerText" (click)="onShareBtnClicked()"></app-button>
+        </div>
+    </div>
+    <div class="document-viewer-body">
+        <div class="document-viewer-body-action-bar">
+            <app-button [btnClass]="sidebarDownloadBtnClass" [buttonTitle]="sidebarDownloadBtnTitle" [buttonInnerText]="sidebarDownloadBtnInnerText"></app-button>
+            <app-button [btnClass]="sidebarEditBtnClass" [buttonTitle]="sidebarEditBtnTitle" [buttonInnerText]="sidebarEditBtnInnerText"></app-button>
+            <app-button [btnClass]="sidebarCommentBtnClass" [buttonTitle]="sidebarCommentBtnTitle" [buttonInnerText]="sidebarCommentBtnInnerText"></app-button>
+            <app-button [btnClass]="sidebarMoreBtnClass" [buttonTitle]="sidebarMoreBtnTitle" [buttonInnerText]="sidebarMoreBtnInnerText"></app-button>
+        </div>
+        <div class="document-preview-cotainer">
+                <div class="doc-canvas">
+                    <app-document-editor (ContentValueChanged)="onContentChange($event)"></app-document-editor>
+                </div>
+        </div>
+        <div class="document-metadata-container">
+            <div class="document-metadata-header">
+                <div class="md-header" *ngIf="!EditingMode">Versions</div>
+                <div class="md-header" *ngIf="EditingMode">AI Tools</div>
+                <div class="md-header">Comments</div>
+            </div>
+            <div class="document-metadata-body"></div>
+        </div>
+    </div>
+</div>

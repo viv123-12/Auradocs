@@ -1,0 +1,14 @@
+<div class="chatbot-container">
+    <div class="chat-window" *ngIf="showChatWindow">
+        <div class="chat-window-header">{{chatwindowHeader}}</div>
+        <div class="message-section"><div class="message">{{initialMessage}}</div><div class="message">{{initialMessage}}</div><div class="message sender-message">{{initialMessage}}</div></div>
+        <div class="chat-window-footer">
+            <input type="text" class="message-input" [placeholder]="messageInputPlaceholder">
+            <app-button [btnClass]="sendBbtnClass" [buttonTitle]="sendButtonTitle" [buttonInnerText]="sendButtonInnerText"></app-button>
+        </div>
+    </div>
+    <div class="chatbot-button-container" (click)="onClickopenChatWindow()">
+        💬
+    </div>
+
+</div>
