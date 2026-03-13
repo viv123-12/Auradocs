@@ -11,43 +11,55 @@ public class DocumentManagerController : ControllerBase
 {
     private readonly AuradocsContext _auradocsContext;
     private readonly UserInformationService _userInformationService;
-    private readonly IConvertFileService _convertFileToPdf;
     private readonly IAIService _aiService;
-    public DocumentManagerController(AuradocsContext auradocsContext, UserInformationService userInformationService, IConvertFileService convertFileToPdf, IAIService aIService)
+    private readonly IDocumentService _documentService;
+    public DocumentManagerController(AuradocsContext auradocsContext, UserInformationService userInformationService, IAIService aIService, IDocumentService documentService)
     {
         _auradocsContext = auradocsContext;
         _userInformationService = userInformationService;
-        _convertFileToPdf = convertFileToPdf;
         _aiService = aIService;
+        _documentService = documentService;
     }
 
     [HttpGet("documents")]
-    public async Task<IActionResult> GetDocumentListAsync()
+    public async Task<IActionResult> GetDocumentListAsync(string? folderGuid)
     {
         User user = await _userInformationService.GetUserInformation();
         if(user == null)
         {
             return Unauthorized();
         }
-        List<string> documents = await _auradocsContext.Documents
-                                        .Where(e => e.uOwnerUserId == user.uUid && !e.boolIsDeleted)
-                                        .Select(e => e.strTitle)
-                                        .ToListAsync();
-
+        List<Document> documents  = await _documentService.GetDocumentListAsync(user.uUid, folderGuid);
         return Ok(documents);
     }
 
     [HttpGet("folders")]
-    public async Task<IActionResult> GetFolderListAsync()
+    public async Task<IActionResult> GetFolderListAsync(string? folderGuid)
     {
-        List<Folder> folders = await _auradocsContext.Folders.Where(f => f.uOwnerUserId == 1 && !f.boolIsDeleted).ToListAsync();
+        User user = await _userInformationService.GetUserInformation();
+        if(user == null)
+        {
+            return Unauthorized();
+        }
+        List<Folder> folders = await _documentService.GetFolderListAsync(user.uUid, folderGuid);
         return Ok(folders);
+    }
+
+    [HttpGet("document/{documentId}")]
+    public async Task<IActionResult> GetDocumentAsync(string documentId)
+    {
+        Document? document = await _documentService.GetActiveDocuementAsync(documentId);
+        if (document == null)
+        {
+            return BadRequest("Document doesn't exist");            
+        }
+        return Ok(document);
     }
 
     [HttpGet("versions/{documentId}")]
     public async Task<IActionResult> GetDocumentVersionAsync(string documentId)
     {
-        List<DocumentVersion> documentVersions = await _auradocsContext.DocumentVersion.Where(d => d.strGuid == documentId).ToListAsync();
+        List<DocumentVersion> documentVersions = await _documentService.GetDocumentVersionsAsync(documentId);
         return Ok(documentVersions);
     }
 
@@ -59,91 +71,53 @@ public class DocumentManagerController : ControllerBase
         {
             return Unauthorized();
         }
-        using var transaction = await _auradocsContext.Database.BeginTransactionAsync();
-        try{
-            Document? document = await GetDocumentUsingTitle(createDocument.Title);
-            while(document != null)
-            {
-                string tempTitle = document.strTitle + $" {AppConstants.existingTitlePostfix}";
-                document = await GetDocumentUsingTitle(tempTitle);
-            };
-            Document newDocument = new Document
-            {
-                strGuid = Guid.NewGuid().ToString(),
-                strTitle = createDocument.Title,
-                strContent = createDocument.Content,
-                uStatusId = (int)createDocument.Status,
-                uCurrentVersionId = 1,
-                uCreatedBy = user.uUid,
-                uOwnerUserId = user.uUid,
-                boolIsDeleted = false,
-                dtUpdatedOn = DateTime.UtcNow,
-                dtCreatedOn = DateTime.UtcNow
-            };
-            _auradocsContext.Documents.Add(newDocument);
-            await _auradocsContext.SaveChangesAsync();
 
-            Document currentDocument = await GetDocumentUsingId(newDocument.strGuid);
-
-            DocumentVersion newdocumentVersion = new DocumentVersion
-            {
-                strGuid = Guid.NewGuid().ToString(),
-                uVersion = 1,
-                uDocumentId = currentDocument.uId,
-                strContent = currentDocument.strContent,
-                uUpdatedBy = user.uUid,
-                dtUpdatedOn = DateTime.UtcNow
-            };
-            _auradocsContext.DocumentVersion.Add(newdocumentVersion);
-            await _auradocsContext.SaveChangesAsync();
-
-            await AssignDocumentToFolder(createDocument.FolderId, newDocument.strGuid);
-            await transaction.CommitAsync();
-            return Ok(newDocument.strGuid);
-        }
-        catch
+        if(!await _documentService.CreateDocumentAsync(user.uUid, createDocument))
         {
-            await transaction.RollbackAsync();
-            throw;
+            return BadRequest();
         }
+        return Ok();
     }
 
     [HttpPut("document")]
     public async Task<IActionResult> UpdateDocumentAsync(UpdateDocumentDto updateDocumentDto)
     {
-        Document? document = await GetDocumentUsingId(updateDocumentDto.Id);
-        if (document == null)
+        User user = await _userInformationService.GetUserInformation();
+        if (user == null)
         {
-            return BadRequest("Document doesn't exist");
+            return Unauthorized();
         }
 
-        document.strTitle = updateDocumentDto.Title;
-        document.strContent = updateDocumentDto.Content;
-        await _auradocsContext.SaveChangesAsync();
+        if(!await _documentService.UpdateDocumentAsync(updateDocumentDto))
+        {
+            return BadRequest();
+        }
         return Ok();
     }
 
     [HttpDelete("document/{documentId}")]
     public async Task<IActionResult> DeleteDocumentAsync(string documentId)
     {
-        Document? document = await GetDocumentUsingId(documentId);
-        if (document == null)
+        User user = await _userInformationService.GetUserInformation();
+        if (user == null)
         {
-            return BadRequest();            
+            return Unauthorized();
         }
-        document.boolIsDeleted = true;
-        await _auradocsContext.SaveChangesAsync();
+        if (!await _documentService.DeleteDocumentAsync(documentId))
+        {
+            return BadRequest();
+        }
         return Ok();
     }
 
     [HttpPost("folder")]
     public async Task<IActionResult> CreateFolderAsync(CreateFolderDto createFolderDto)
     {
-        Folder? folder = await GetFolderUsingTitle(createFolderDto.Title);
-        if (folder != null)
-        {
-            createFolderDto.Title = $"{folder.strTitle} {AppConstants.existingTitlePostfix}";
-        }
+        // Folder? folder = await GetFolderUsingTitle(createFolderDto.Title);
+        // if (folder != null)
+        // {
+        //     createFolderDto.Title = $"{folder.strTitle} {AppConstants.existingTitlePostfix}";
+        // }
         return Ok();
     }
 
@@ -155,51 +129,11 @@ public class DocumentManagerController : ControllerBase
         {
             return Unauthorized();
         }
-        //get esiting document
-        Document? document  =  await _auradocsContext.Documents
-                                    .Where(e => e.strGuid == documentId)
-                                    .FirstOrDefaultAsync();
-        if (document == null)
+
+        if (await _documentService.DuplicateDocumentAsync(user.uUid, documentId))
         {
             return BadRequest();
         }
-
-        //create copy of the document
-        Document newDocument = new Document()
-        {
-            strGuid = Guid.NewGuid().ToString(),
-            strTitle = $"{document.strTitle} {AppConstants.duplicateDocumentTitlePostFix}",
-            strContent = document.strContent,
-            uStatusId = (int)DocumentStatus.DRAFT,
-            uCurrentVersionId = 1,
-            uCreatedBy = user.uUid,
-            uOwnerUserId = user.uUid,
-            boolIsDeleted = false,
-            dtUpdatedOn = DateTime.UtcNow,
-            dtCreatedOn = DateTime.UtcNow
-        };
-        _auradocsContext.Documents.Add(newDocument);
-        await _auradocsContext.SaveChangesAsync();
-
-        // create the version of document
-        Document? currentDocument = await GetDocumentUsingId(newDocument.strGuid);
-        if (currentDocument == null)
-        {
-            return BadRequest();
-        }
-
-        DocumentVersion newdocumentVersion = new DocumentVersion
-        {
-            strGuid = Guid.NewGuid().ToString(),
-            uVersion = 1,
-            uDocumentId = currentDocument.uId,
-            strContent = currentDocument.strContent,
-            uUpdatedBy = user.uUid,
-            dtUpdatedOn = DateTime.UtcNow
-        };
-        _auradocsContext.DocumentVersion.Add(newdocumentVersion);
-        await _auradocsContext.SaveChangesAsync();
-    
         return Ok();
     }
 
@@ -212,42 +146,22 @@ public class DocumentManagerController : ControllerBase
             return Unauthorized();
         }
 
-        DocumentSharedWithUser? documentShared = await _auradocsContext.DocumentsSharedWithUsers
-                                                    .Where(e => e.uSharedDocumentId == shareDocument.documentId && e.uSharedBy == user.uUid && e.uSharedWith == shareDocument.sharedWith)
-                                                    .FirstOrDefaultAsync();
-        if (documentShared is null)
+        if(!await _documentService.ShareDocumentAsync(user.uUid, shareDocument))
         {
-            documentShared = new DocumentSharedWithUser
-            {
-                uSharedDocumentId = shareDocument.documentId,
-                uSharedWith = shareDocument.sharedWith,
-                uSharedBy = user.uUid,
-                uAccessgiven = shareDocument.AccessType,
-                dtAccessGivenOn = DateTime.UtcNow
-            };
-            _auradocsContext.DocumentsSharedWithUsers.Add(documentShared);
+            return BadRequest();
         }
-        else
-        {
-            documentShared.uAccessgiven = shareDocument.AccessType;
-            documentShared.dtAccessGivenOn = DateTime.UtcNow;
-        }
-        await _auradocsContext.SaveChangesAsync();
         return Ok();
     }
 
     [HttpGet("download-document/{documentId}")]
     public async Task<IActionResult> DownloadDocumentAsync(string documentId)
     {
-        Document? document = await _auradocsContext.Documents
-                                    .Where(e => e.strGuid == documentId)
-                                    .FirstOrDefaultAsync();
-        if (document == null)
+        (byte[] pdf, string documentTitle) = await _documentService.DownloadDocumentAsync(documentId);
+        if (pdf == null || documentTitle == null)
         {
-            return BadRequest("Document not exist!!");
+            return BadRequest();
         }
-        byte[] pdf = _convertFileToPdf.ConvertFile(document.strContent);
-        return Ok(File(pdf,"application/octet-stream", document.strTitle));
+        return Ok(File(pdf,"application/octet-stream", documentTitle));
     }
 
     [HttpPost("rewrite-text")]
@@ -287,43 +201,5 @@ public class DocumentManagerController : ControllerBase
 
         string llmResponse = await _aiService.TranslateAsync(documentEditorTextRequest.SelectedText, documentEditorTextRequest.Language);
         return Ok(llmResponse);
-    }
-
-    private async Task<Folder?> GetFolderUsingId(string id)
-    {
-        return await _auradocsContext.Folders.Where(f => f.strGuid == id).FirstOrDefaultAsync();
-    }
-
-    private async Task<Folder?> GetFolderUsingTitle(string title)
-    {
-        return await _auradocsContext.Folders.Where(f => f.strTitle == title).FirstOrDefaultAsync();
-    }
-
-    private async Task<Document?> GetDocumentUsingId(string id)
-    {
-        return await _auradocsContext.Documents.Where(e => e.strGuid == id).FirstOrDefaultAsync();
-    }
-
-    private async Task<Document?> GetDocumentUsingTitle(string title)
-    {
-        return await _auradocsContext.Documents.Where(e => e.strTitle == title).FirstOrDefaultAsync();
-    }
-
-    private async Task AssignDocumentToFolder(string folderId, string documentId)
-    {
-        Folder? folder = await GetFolderUsingId(folderId);
-        Document? currentDocument = await GetDocumentUsingId(documentId);
-        if (folder != null)
-        {
-            DocumentFolder folderHasDocument = new DocumentFolder
-            {
-                strGuid = Guid.NewGuid().ToString(),
-                uDocumentId = currentDocument.uId,
-                uFolderId = folder.uId,
-                dtCreatedAt = DateTime.UtcNow
-            };
-            _auradocsContext.DocumentFolders.Add(folderHasDocument);
-            await _auradocsContext.SaveChangesAsync();
-        }
     }
 }

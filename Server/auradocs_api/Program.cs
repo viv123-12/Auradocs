@@ -58,7 +58,12 @@ builder.Services.AddScoped<IConvertFileService, ConvertHtmlToPdf>();
 builder.Services.AddScoped<IAIService,AIService>();
 builder.Services.AddScoped<ILLMClients, OpenAiClient>();
 builder.Services.AddScoped<UserInformationService>();
-
+builder.Services.AddScoped<IDocumentFolderRepository,DocumentFolderRepository>();
+builder.Services.AddScoped<IDocumentRepository, DocumentRepository>();
+builder.Services.AddScoped<IDocumentSharedWithUsersRepository, DocumentSharerdWithUsersRepository>();
+builder.Services.AddScoped<IDocumentVersionRepository, DocumentVersionRepository>();
+builder.Services.AddScoped<IFolderRepository,FolderRepository>();
+builder.Services.AddScoped<IDocumentService, DocumentService>();
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
