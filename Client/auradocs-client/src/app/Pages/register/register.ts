@@ -1,14 +1,13 @@
 import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Dropdown } from '../components/dropdown/dropdown';
-import { Switch } from '../components/switch/switch';
 import { CommonModule } from '@angular/common';
-import { Authentication, RegisterRequest } from '../services/authentication';
-import { UserType } from '../shared/enums/user-type.enum';
-import { required } from '@angular/forms/signals';
 import { Router } from '@angular/router';
-import { MasterDataService } from '../services/master-data-service';
-import { DropDownOptions } from '../constants/app-constants';
+import { DropDownOptions } from '../../constants/app-constants';
+import { Dropdown } from '../../components/dropdown/dropdown';
+import { Switch } from '../../components/switch/switch';
+import { UserType } from '../../shared/enums/user-type.enum';
+import { Authentication, RegisterRequest } from '../../services/authentication';
+import { MasterDataService } from '../../services/master-data-service';
 
 type DomainPracticeAreas = {
   [key: string]: DropDownOptions<number>[];

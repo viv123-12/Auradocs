@@ -20,6 +20,7 @@ export const API_CONSTANTS =
         GET_FILES: `${LOCAL_ENVIRONEMNT}/DocumentManager/documents`,
         CREATE_DOCUMENTS: `${LOCAL_ENVIRONEMNT}/DocumentManager/document`,
         CREATE_FOLDER: `${LOCAL_ENVIRONEMNT}/DocumentManager/folder`,
-        UPDATE_DOCUMENT: `${LOCAL_ENVIRONEMNT}/DocumentManager/document`
+        UPDATE_DOCUMENT: `${LOCAL_ENVIRONEMNT}/DocumentManager/document`,
+        DUPLICATE_DOCUMENT:`${LOCAL_ENVIRONEMNT}/DocumentManager/duplicate-document`
     }
 }

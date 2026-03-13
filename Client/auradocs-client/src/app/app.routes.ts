@@ -1,43 +1,41 @@
 import { Routes } from '@angular/router';
-import { DocumentViewer } from './document-viewer/document-viewer';
-import { VerificationFailed } from './verification-failed/verification-failed';
-import { ResetPassword } from './reset-password/reset-password';
+import { DocumentViewer } from './Pages/document-viewer/document-viewer';
 
 export const routes: Routes = [
     {
         path:'',
         loadComponent: () =>
-            import('./main-layout-component/main-layout-component').then(m => m.MainLayoutComponent)
+            import('./Pages/main-layout-component/main-layout-component').then(m => m.MainLayoutComponent)
     },
     {
         path:'login',
         loadComponent:() =>
-            import('./login/login').then(m => m.Login)
+            import('./Pages/login/login').then(m => m.Login)
     },
     {
         path:'register',
         loadComponent: () => 
-            import('./register/register').then(m => m.Register)
+            import('./Pages/register/register').then(m => m.Register)
     },
     {
         path:'features',
         loadComponent: () => 
-            import('./features/features').then(m => m.Features)
+            import('./Pages/features/features').then(m => m.Features)
     },
     {
         path:'dashboard',
         loadComponent: () =>
-            import('./dashboard/dashboard').then(m => m.Dashboard)
+            import('./Pages/dashboard/dashboard').then(m => m.Dashboard)
     },
     {
         path:'about',
         loadComponent: () => 
-            import('./about/about').then(m => m.About)
+            import('./Pages/about/about').then(m => m.About)
     },
     {
         path:'contact',
         loadComponent: () => 
-            import('./contact/contact').then(m => m.Contact)
+            import('./Pages/contact/contact').then(m => m.Contact)
     },
     {
         path:'blog',
@@ -47,7 +45,7 @@ export const routes: Routes = [
     {
         path:'reset-password',
         loadComponent:() => 
-            import('./reset-password/reset-password').then(m => m.ResetPassword)
+            import('./Pages/reset-password/reset-password').then(m => m.ResetPassword)
     },
     {
         path:'verify-account',
@@ -57,17 +55,17 @@ export const routes: Routes = [
     {
         path:'documents',
         loadComponent: () => 
-            import('./documents/documents').then(d => d.Documents)
+            import('./Pages/documents/documents').then(d => d.Documents)
     },
     {
         path:'documents/:folderId',
         loadComponent: () =>
-                import('./documents/documents').then(d => d.Documents)
+                import('./Pages/documents/documents').then(d => d.Documents)
     },
     {
         path:'document-editor/:id',
         loadComponent:() =>
-            import('./document-viewer/document-viewer').then(d => DocumentViewer)
+            import('./Pages/document-viewer/document-viewer').then(d => DocumentViewer)
     },
     {
         path:'verification-failed',

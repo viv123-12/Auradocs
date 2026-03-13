@@ -1,11 +1,12 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { Button } from '../components/button/button';
-import { Dropdown } from '../components/dropdown/dropdown';
 import { CommonModule } from '@angular/common';
-import { CreateFolderRequest, CreateNewDocumentRequest, DocumentManagerService } from '../services/document-manager-service';
-import { DOCUMENT_SHARE_SCOPE_FILTER_OPTIONS, DOCUMENT_STATUS, DOCUMENT_STATUS_FILTER_OPTIONS, DOCUMENT_TYPES, DOCUMENT_TYPES_FILTER_OPTIONS, DropDownOptions, SHARE_SCOPE } from '../constants/app-constants';
+
 import { Router, ActivatedRoute} from '@angular/router';
-import { STRING_CONSTANTS } from '../constants/string-constants'; 
+import { Dropdown } from '../../components/dropdown/dropdown';
+import { Button } from '../../components/button/button';
+import { STRING_CONSTANTS } from '../../constants/string-constants';
+import { CreateFolderRequest, CreateNewDocumentRequest, DocumentManagerService } from '../../services/document-manager-service';
+import { DOCUMENT_SHARE_SCOPE_FILTER_OPTIONS, DOCUMENT_STATUS, DOCUMENT_STATUS_FILTER_OPTIONS, DOCUMENT_TYPES, DOCUMENT_TYPES_FILTER_OPTIONS, DropDownOptions, SHARE_SCOPE } from '../../constants/app-constants';
 
 @Component({
   selector: 'app-documents',

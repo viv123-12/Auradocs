@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { Chart, registerables } from 'chart.js';
-import { Chatbot } from '../components/chatbot/chatbot';
+import { Chatbot } from '../../components/chatbot/chatbot';
 
 @Component({
   selector: 'app-dashboard',

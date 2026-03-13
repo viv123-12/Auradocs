@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Button } from '../components/button/button';
 import { CommonModule } from '@angular/common';
-import { Authentication, ResetPasswordRequest } from '../services/authentication';
-import { INPUTTYPES } from '../constants/app-constants';
+import { Authentication, ResetPasswordRequest } from '../../services/authentication';
+import { INPUTTYPES } from '../../constants/app-constants';
+import { Button } from '../../components/button/button';
 
 @Component({
   selector: 'app-reset-password',

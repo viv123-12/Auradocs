@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { UserType } from '../shared/enums/user-type.enum';
-import { Switch } from '../components/switch/switch';
+import { UserType } from '../../shared/enums/user-type.enum';
+import { Switch } from '../../components/switch/switch';
 import { CommonModule } from '@angular/common';
-import { Authentication, LoginRequest } from '../services/authentication';
+import { Authentication, LoginRequest } from '../../services/authentication';
 
 @Component({
   selector: 'app-login',

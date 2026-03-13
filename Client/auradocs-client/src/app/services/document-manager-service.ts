@@ -20,9 +20,9 @@ export interface CreateFolderRequest
 
 export interface UpdateDocumentRequest
 {
-  documentId:string,
-  title:string,
-  content:string
+  DocumentId:string|null,
+  Title:string,
+  Content :string
 }
 
 @Injectable({
@@ -62,5 +62,11 @@ export class DocumentManagerService {
   {
     const body = updateDocumentRequest;
     return this.api.put(API_CONSTANTS.DOCUMENTS.UPDATE_DOCUMENT, body, this.options);
+  }
+
+  public duplicateDocument(documentId:string | null)
+  {
+    const URL = API_CONSTANTS.DOCUMENTS.DUPLICATE_DOCUMENT + `/${documentId}`;
+    return this.api.put(URL,this.options);
   }
 }

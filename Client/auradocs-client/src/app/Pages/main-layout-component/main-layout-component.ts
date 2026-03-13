@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import { Navbar } from '../components/navbar/navbar';
+import { Navbar } from '../../components/navbar/navbar';
 import { ReactiveFormsModule } from '@angular/forms';
-import { SideBar } from '../components/side-bar/side-bar';
-import { Button } from '../components/button/button';
+import { SideBar } from '../../components/side-bar/side-bar';
+import { Button } from '../../components/button/button';
 import { DocumentViewer } from '../document-viewer/document-viewer';
 import { Router } from '@angular/router';
 

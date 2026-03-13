@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { Button } from '../components/button/button';
+import { Button } from '../../components/button/button';
 import { CommonModule } from '@angular/common';
 import { DocumentEditor } from '../document-editor/document-editor';
 import { ActivatedRoute, Router } from '@angular/router';
-import { STRING_CONSTANTS } from '../constants/string-constants';
-import { DocumentManagerService, UpdateDocumentRequest } from '../services/document-manager-service';
-import { AuradocsHelpler } from '../constants/Hepler';
+import { STRING_CONSTANTS } from '../../constants/string-constants';
+import { DocumentManagerService, UpdateDocumentRequest } from '../../services/document-manager-service';
+import { AuradocsHelpler } from '../../constants/Hepler';
 
 @Component({
   selector: 'app-document-viewer',
@@ -48,9 +48,9 @@ export class DocumentViewer implements OnInit{
   public content:string = ''; 
   private documentId:string | null = '';
   public saveDocument:UpdateDocumentRequest = {
-      documentId:'',
-      title:'',
-      content:''
+      DocumentId:'',
+      Title:'',
+      Content:''
   }
 
   public constructor(private router:Router, public documentManager:DocumentManagerService, private activatedRoute:ActivatedRoute){
@@ -81,11 +81,11 @@ export class DocumentViewer implements OnInit{
   public onSaveBtnClicked()
   {
     this.saveDocument = {
-      documentId:'' ,
-      title: this.documentTitle,
-      content: this.content
+      DocumentId:this.documentId ,
+      Title: this.documentTitle,
+      Content: this.content
     }
-    AuradocsHelpler.ApiCallHelper(this.documentManager.saveDocument, ()=> {
+    AuradocsHelpler.ApiCallHelper(this.documentManager.saveDocument.bind(this.documentManager), ()=> {
       console.log("Document Has saved");
     }, ()=>{
       
@@ -97,7 +97,11 @@ export class DocumentViewer implements OnInit{
   }
   public onDuplicateBtnClicked()
   {
-    console.log("Duplicate Button clicked");
+    AuradocsHelpler.ApiCallHelper(this.documentManager.duplicateDocument.bind(this.documentManager), () => {
+      console.log("Document Duplicated")
+    },()=>{
+      
+    },this.documentId);
   }
 }
 

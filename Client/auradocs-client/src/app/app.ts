@@ -1,5 +1,5 @@
 import { Component, signal } from '@angular/core';
-import { MainLayoutComponent } from './main-layout-component/main-layout-component';
+import { MainLayoutComponent } from './Pages/main-layout-component/main-layout-component';
 import { RouterOutlet } from '@angular/router';
 import { Navbar } from './components/navbar/navbar';
 import { LoaderService } from './services/loader-service';
