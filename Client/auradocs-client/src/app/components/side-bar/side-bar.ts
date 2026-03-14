@@ -7,7 +7,7 @@ import { Authentication } from '../../services/authentication';
 
 @Component({
   selector: 'app-side-bar',
-  imports: [CommonModule, RouterLink, RouterLinkActive],
+  imports: [CommonModule, RouterLink],
   templateUrl: './side-bar.html',
   styleUrl: './side-bar.scss',
 })

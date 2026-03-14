@@ -1,6 +1,7 @@
 <ckeditor
   [editor]="Editor"
   [config]="config"
+  [(ngModel)]="content"
   (change)="onEditorValueChange($event)"
   (ready)="onReady($event)">
 </ckeditor>

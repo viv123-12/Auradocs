@@ -29,7 +29,7 @@ public class DocumentManagerController : ControllerBase
         {
             return Unauthorized();
         }
-        List<Document> documents  = await _documentService.GetDocumentListAsync(user.uUid, folderGuid);
+        List<DocumentResponse> documents  = await _documentService.GetDocumentListAsync(user.uUid, folderGuid);
         return Ok(documents);
     }
 
@@ -41,14 +41,14 @@ public class DocumentManagerController : ControllerBase
         {
             return Unauthorized();
         }
-        List<Folder> folders = await _documentService.GetFolderListAsync(user.uUid, folderGuid);
+        List<FolderResponse> folders = await _documentService.GetFolderListAsync(user.uUid, folderGuid);
         return Ok(folders);
     }
 
     [HttpGet("document/{documentId}")]
     public async Task<IActionResult> GetDocumentAsync(string documentId)
     {
-        Document? document = await _documentService.GetActiveDocuementAsync(documentId);
+        DocumentResponse? document = await _documentService.GetActiveDocuementAsync(documentId);
         if (document == null)
         {
             return BadRequest("Document doesn't exist");            
@@ -71,12 +71,12 @@ public class DocumentManagerController : ControllerBase
         {
             return Unauthorized();
         }
-
-        if(!await _documentService.CreateDocumentAsync(user.uUid, createDocument))
+        string documenId = await _documentService.CreateDocumentAsync(user.uUid, createDocument);
+        if(string.IsNullOrEmpty(documenId))
         {
             return BadRequest();
         }
-        return Ok();
+        return Ok(documenId);
     }
 
     [HttpPut("document")]
@@ -113,12 +113,27 @@ public class DocumentManagerController : ControllerBase
     [HttpPost("folder")]
     public async Task<IActionResult> CreateFolderAsync(CreateFolderDto createFolderDto)
     {
-        // Folder? folder = await GetFolderUsingTitle(createFolderDto.Title);
-        // if (folder != null)
-        // {
-        //     createFolderDto.Title = $"{folder.strTitle} {AppConstants.existingTitlePostfix}";
-        // }
+        User user = await _userInformationService.GetUserInformation();
+        if (user == null)
+        {
+            return Unauthorized();
+        }
+        if(!await _documentService.CreateFolderAsync(user.uUid, createFolderDto))
+        {
+            return BadRequest();
+        }
         return Ok();
+    }
+
+    [HttpGet("folder/{folderId}")]
+    public async Task<IActionResult> GetActiveFolderAsync(string folderId)
+    {
+        FolderResponse folderResponse = await _documentService.GetActiveFolderAsync(folderId);
+        if(folderResponse == null)
+        {
+            return BadRequest();
+        }
+        return Ok(folderResponse);
     }
 
     [HttpPost("duplicate-document/{documentId}")]
@@ -130,7 +145,7 @@ public class DocumentManagerController : ControllerBase
             return Unauthorized();
         }
 
-        if (await _documentService.DuplicateDocumentAsync(user.uUid, documentId))
+        if (!await _documentService.DuplicateDocumentAsync(user.uUid, documentId))
         {
             return BadRequest();
         }
@@ -161,7 +176,11 @@ public class DocumentManagerController : ControllerBase
         {
             return BadRequest();
         }
-        return Ok(File(pdf,"application/octet-stream", documentTitle));
+        if(pdf.Length == 0)
+        {
+            throw new Exception("Generated PDF is empty");
+        }
+        return File(pdf,"application/pdf", $"{documentTitle}.pdf");
     }
 
     [HttpPost("rewrite-text")]

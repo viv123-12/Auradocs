@@ -3,13 +3,13 @@ import { Observable } from "rxjs";
 
 export class AuradocsHelpler{
 
-    public static ApiCallHelper(EndpointFunctionCall:(arg?:any) => Observable<any>, onSuccess:() => void, onError:() => void, body?:any)
+    public static ApiCallHelper(EndpointFunctionCall:(arg?:any) => Observable<any>, onSuccess:(data:any) => any, onError:() => void, body?:any)
     {
         EndpointFunctionCall(body).subscribe({
           next:
             res => {
               if (res.status == 200){
-                onSuccess();
+                onSuccess(res.body);
               }
             },
           error:

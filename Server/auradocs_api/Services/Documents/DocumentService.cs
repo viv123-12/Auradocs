@@ -22,7 +22,7 @@ public class DocumentService : IDocumentService
         _documentSharedWithUserRepository = documentSharedWithUserRepository;
         _convertFileToPdf = convertFileToPdf;
     }
-    public async Task<bool> CreateDocumentAsync(int userId, CreateDocumentDto createDocument)
+    public async Task<string> CreateDocumentAsync(int userId, CreateDocumentDto createDocument)
     {
         using var transaction = await _auradocsContext.Database.BeginTransactionAsync();
         try{
@@ -62,18 +62,37 @@ public class DocumentService : IDocumentService
 
             await AssignDocumentToFolderAsync(createDocument.FolderId, newDocument.strGuid);
             await transaction.CommitAsync();
-            return true;
+            return newDocument.strGuid;
         }
         catch
         {
             await transaction.RollbackAsync();
-            return false;
+            return null;
         }
     }
 
-    public Task CreateFolderAsync()
+    public async Task<bool> CreateFolderAsync(int userId, CreateFolderDto createFolder)
     {
-        throw new NotImplementedException();
+        int parentFolderId = 0;
+        if(!string.IsNullOrEmpty(createFolder.ParentFolderId))
+        {
+            parentFolderId = (await _folderRepository.GetFolderUsingId(createFolder.ParentFolderId)).uId;
+        }
+        Folder newFolder = new Folder
+        {
+            strGuid = Guid.NewGuid().ToString(),
+            strTitle = createFolder.Title,
+            uParentFolderId = parentFolderId,
+            uOwnerUserId = userId,
+            uCreatedBy = userId,
+            boolIsDeleted = false,
+            dtCreatedOn = DateTime.UtcNow
+        };
+        if(!await _folderRepository.AddFolderAsync(newFolder))
+        {
+            return false;
+        }
+        return true;
     }
 
     public async Task<bool> DeleteDocumentAsync(string documenId)
@@ -115,7 +134,7 @@ public class DocumentService : IDocumentService
             strGuid = Guid.NewGuid().ToString(),
             strTitle = $"{document.strTitle} {AppConstants.duplicateDocumentTitlePostFix}",
             strContent = document.strContent,
-            uStatusId = (int)DocumentStatus.DRAFT,
+            uStatusId = (int)DocumentStatus.Draft,
             uCurrentVersionId = 1,
             uCreatedBy = userId,
             uOwnerUserId = userId,
@@ -145,7 +164,7 @@ public class DocumentService : IDocumentService
         return true;
     }
 
-    public async Task<List<Document>> GetDocumentListAsync(int userId, string? folderGuid)
+    public async Task<List<DocumentResponse>> GetDocumentListAsync(int userId, string? folderGuid)
     {
         if(!string.IsNullOrEmpty(folderGuid))
         {
@@ -155,13 +174,13 @@ public class DocumentService : IDocumentService
                 return null;
             }
             List<int> currentFolderDocumentList = await _documentFolderRepository.GetDocumentsOfFoldersIdlistAsync(folder.uId);
-            return await _documentRepository.GetAllActiveDocumentsOfFolderAsync(currentFolderDocumentList, userId);
+            return await _documentRepository.ListAllActiveDocumentsOfFolderAsync(currentFolderDocumentList, userId);
         }
-        List<Document> documents = await _documentRepository.GetActiveDocumentsAsync(userId);
+        List<DocumentResponse> documents = await _documentRepository.ListOrphenDocumentsAsync(userId);
         return documents;
     }
 
-    public async Task<List<Folder>> GetFolderListAsync(int userId, string? folderId)
+    public async Task<List<FolderResponse>> GetFolderListAsync(int userId, string? folderId)
     {
         if(!string.IsNullOrEmpty(folderId))
         {
@@ -171,15 +190,24 @@ public class DocumentService : IDocumentService
                 return null;
             }
             List<int> currentFolderChildrendFolderList = await _folderRepository.GetChildrenFoldersIdAsync(folder.uId);
-            return await _folderRepository.GetActiveChildFoldersAsync(currentFolderChildrendFolderList, userId);
+            return await _folderRepository.ListActiveChildFoldersAsync(currentFolderChildrendFolderList, userId);
         }
-        List<Folder> folders = await _folderRepository.GetActivatedFoldersAsync(userId);
+        List<FolderResponse> folders = await _folderRepository.ListOrphanFoldersAsync(userId);
         return folders;
     }
 
-    public async Task<Document> GetActiveDocuementAsync(string folderId)
+    public async Task<DocumentResponse> GetActiveDocuementAsync(string folderId)
     {
-        return await _documentRepository.GetDocumentUsingIdAsync(folderId);
+        Document document = await _documentRepository.GetDocumentUsingIdAsync(folderId);
+        DocumentResponse documentResponse = new DocumentResponse
+        {
+          documentId  = document.strGuid,
+          documentContent = document.strContent,
+          documentTitle = document.strTitle,
+          documentState = CommonHelper.GetDocumentState(document.uStatusId),  
+          currentDocumentVersion = document.uCurrentVersionId
+        };
+        return documentResponse;
     }
 
     public async Task<List<DocumentVersion>> GetDocumentVersionsAsync(string documentId)
@@ -239,5 +267,20 @@ public class DocumentService : IDocumentService
             };
             await _documentFolderRepository.AddDocumentInFolderAsync(folderHasDocument);
         }
+    }
+
+    public async Task<FolderResponse> GetActiveFolderAsync(string folderId)
+    {
+        Folder folder = await _folderRepository.GetFolderUsingId(folderId);
+        if(folder == null)
+        {
+            return null;
+        }
+        FolderResponse folderResponse = new FolderResponse
+        {
+          folderId = folder.strGuid,
+          folderTitle = folder.strTitle,  
+        };
+        return folderResponse;
     }
 }

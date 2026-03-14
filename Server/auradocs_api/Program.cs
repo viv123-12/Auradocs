@@ -51,6 +51,8 @@ builder.Services.Configure<LLMSettings>(
 );
 
 builder.Services.AddScoped<IEmailService, EmailService>();
+var context = new CustomAssemblyLoadContext();
+context.LoadUnmanagedLibrary(Path.Combine(Directory.GetCurrentDirectory(), "libwkhtmltox.dll"));
 builder.Services.AddSingleton<IConverter>(
     new SynchronizedConverter(new PdfTools())
 );
@@ -58,6 +60,7 @@ builder.Services.AddScoped<IConvertFileService, ConvertHtmlToPdf>();
 builder.Services.AddScoped<IAIService,AIService>();
 builder.Services.AddScoped<ILLMClients, OpenAiClient>();
 builder.Services.AddScoped<UserInformationService>();
+builder.Services.AddScoped<IUSerRepository, UserRepository>();
 builder.Services.AddScoped<IDocumentFolderRepository,DocumentFolderRepository>();
 builder.Services.AddScoped<IDocumentRepository, DocumentRepository>();
 builder.Services.AddScoped<IDocumentSharedWithUsersRepository, DocumentSharerdWithUsersRepository>();

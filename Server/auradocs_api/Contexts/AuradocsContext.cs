@@ -189,7 +189,6 @@ public class AuradocsContext : DbContext
             entity.Property(e => e.uCreatedBy).HasColumnName("uCreatedBy");
             entity.Property(e => e.dtCreatedOn).HasColumnName("dtCreatedOn");
 
-            entity.HasOne<Folder>().WithMany().HasForeignKey(e => e.uParentFolderId).HasConstraintName("FK_Folder_uParentFolderId");
             entity.HasOne<User>().WithMany().HasForeignKey(e => e.uOwnerUserId).HasConstraintName("FK_Folder_uOwnerUserId");
             entity.HasOne<User>().WithMany().HasForeignKey(e => e.uCreatedBy).HasConstraintName("FK_Folder_uCreatedBy");
 

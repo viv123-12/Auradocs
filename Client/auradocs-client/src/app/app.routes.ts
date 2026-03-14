@@ -63,7 +63,7 @@ export const routes: Routes = [
                 import('./Pages/documents/documents').then(d => d.Documents)
     },
     {
-        path:'document-editor/:id',
+        path:'document-editor/:id/:mode',
         loadComponent:() =>
             import('./Pages/document-viewer/document-viewer').then(d => DocumentViewer)
     },

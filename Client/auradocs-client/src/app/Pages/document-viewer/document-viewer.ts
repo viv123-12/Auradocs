@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Button } from '../../components/button/button';
 import { CommonModule } from '@angular/common';
 import { DocumentEditor } from '../document-editor/document-editor';
@@ -6,6 +6,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { STRING_CONSTANTS } from '../../constants/string-constants';
 import { DocumentManagerService, UpdateDocumentRequest } from '../../services/document-manager-service';
 import { AuradocsHelpler } from '../../constants/Hepler';
+import { DocumentDetail } from '../../constants/Interfaces/DocumentDetail';
+import { DOCUMENT_EDIOR_MODES } from '../../constants/app-constants';
 
 @Component({
   selector: 'app-document-viewer',
@@ -44,8 +46,16 @@ export class DocumentViewer implements OnInit{
   public sidebarMoreBtnTitle:string = "More";
   public sidebarMoreBtnInnerText:string = "More";
 
-  public EditingMode:boolean = true;
-  public content:string = ''; 
+  public ReadingMode:boolean = true;
+  public currentDocument:DocumentDetail = {
+    documentId:'',
+    documentTitle:'',
+    documentContent:'',
+    documentState:'',
+    createdBy:'',
+    ownedBy:'',
+    currentDocumentVersion:0
+  }; 
   private documentId:string | null = '';
   public saveDocument:UpdateDocumentRequest = {
       DocumentId:'',
@@ -53,19 +63,25 @@ export class DocumentViewer implements OnInit{
       Content:''
   }
 
-  public constructor(private router:Router, public documentManager:DocumentManagerService, private activatedRoute:ActivatedRoute){
-    console.log("inside the constructor")
+  public constructor(private router:Router, public documentManager:DocumentManagerService, private activatedRoute:ActivatedRoute, private cdr: ChangeDetectorRef){
   }
   ngOnInit(): void {
     this.activatedRoute.paramMap.subscribe((param)=>{
       this.documentId = param.get('id');
-    })
-    console.log("inside the constructor")
+      const mode = param.get('mode');
+
+      this.ReadingMode = mode == DOCUMENT_EDIOR_MODES.READ;
+    });
+    AuradocsHelpler.ApiCallHelper(this.documentManager.getDocument.bind(this.documentManager), (res)=> {
+      this.currentDocument = JSON.parse(res)
+      this.cdr.markForCheck();
+    }, ()=>{
+    }, this.documentId);
   }
 
   public onTitleChange(event: Event)
   {
-    this.documentTitle = (event.target as HTMLElement).innerText;
+    this.currentDocument.documentTitle = (event.target as HTMLElement).innerText;
   }
 
   public onBackButtonClick()
@@ -75,15 +91,15 @@ export class DocumentViewer implements OnInit{
 
   public onContentChange(editorContent:string)
   {
-    this.content = editorContent;
+    this.currentDocument.documentContent = editorContent;
   }
 
   public onSaveBtnClicked()
   {
     this.saveDocument = {
       DocumentId:this.documentId ,
-      Title: this.documentTitle,
-      Content: this.content
+      Title: this.currentDocument.documentTitle,
+      Content: this.currentDocument.documentContent
     }
     AuradocsHelpler.ApiCallHelper(this.documentManager.saveDocument.bind(this.documentManager), ()=> {
       console.log("Document Has saved");
@@ -102,6 +118,30 @@ export class DocumentViewer implements OnInit{
     },()=>{
       
     },this.documentId);
+    this.router.navigate(['/documents'])
+  }
+  public onClickEditBtn()
+  {
+    this.router.navigate(['/document-editor',this.documentId,'edit']);
+  }
+  public onClickDownloadBtn()
+  {
+    AuradocsHelpler.ApiCallHelper(this.documentManager.downloadDocument.bind(this.documentManager),(res)=>{
+      const blob = new Blob([res], { type: 'application/pdf' });
+
+      const fileURL = window.URL.createObjectURL(blob);
+
+      const a = document.createElement('a');
+      a.href = fileURL;
+      a.download = 'document.pdf';
+      a.click();
+
+      window.URL.revokeObjectURL(fileURL);
+    },()=> {}, this.documentId);
+  }
+  public onClickCommentBtn()
+  {
+    console.log("comment btn clicked");
   }
 }
 

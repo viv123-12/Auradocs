@@ -7,8 +7,7 @@ import { Authentication } from '../../services/authentication';
   selector: 'app-navbar',
   imports: [
     CommonModule,
-    RouterLink,
-    RouterLinkActive
+    RouterLink
   ],
   templateUrl: './navbar.html',
   styleUrl: './navbar.scss',

@@ -17,10 +17,14 @@ export const API_CONSTANTS =
     },
     DOCUMENTS:{
         GET_FOLDERS: `${LOCAL_ENVIRONEMNT}/DocumentManager/folders`,
+        OPEN_DOCUMENT:`${LOCAL_ENVIRONEMNT}/DocumentManager/document`,
+        OPEN_FOLDER:`${LOCAL_ENVIRONEMNT}/DoCumentManager/folder`,
         GET_FILES: `${LOCAL_ENVIRONEMNT}/DocumentManager/documents`,
         CREATE_DOCUMENTS: `${LOCAL_ENVIRONEMNT}/DocumentManager/document`,
         CREATE_FOLDER: `${LOCAL_ENVIRONEMNT}/DocumentManager/folder`,
         UPDATE_DOCUMENT: `${LOCAL_ENVIRONEMNT}/DocumentManager/document`,
-        DUPLICATE_DOCUMENT:`${LOCAL_ENVIRONEMNT}/DocumentManager/duplicate-document`
+        DUPLICATE_DOCUMENT:`${LOCAL_ENVIRONEMNT}/DocumentManager/duplicate-document`,
+        DELETE_DOCUMENT:`${LOCAL_ENVIRONEMNT}/DocumentManager/document`,
+        DOWNLOAD_DOCUMENT:`${LOCAL_ENVIRONEMNT}/DocumentManager/download-document`
     }
 }

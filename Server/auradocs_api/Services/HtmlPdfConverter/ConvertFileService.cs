@@ -19,11 +19,15 @@ public class ConvertHtmlToPdf: IConvertFileService
         HtmlToPdfDocument doc = new HtmlToPdfDocument()
         {
             GlobalSettings = {
+                Orientation = Orientation.Portrait,
                 PaperSize = PaperKind.A4
             },
             Objects = {
                 new ObjectSettings() {
-                    HtmlContent = htmlContent
+                    HtmlContent = CommonHelper.GetHtmlContentWrapper(htmlContent),
+                    WebSettings = {
+                        DefaultEncoding = "utf-8"
+                    }
                 }
             }
         };

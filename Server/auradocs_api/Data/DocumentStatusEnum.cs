@@ -1,5 +1,6 @@
 public enum DocumentStatus
 {
-    DRAFT = 1,
-    PUBLISHED = 2
+    Draft = 1,
+    Published = 2,
+    Archived = 3
 }

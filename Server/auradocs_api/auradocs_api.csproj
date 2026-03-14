@@ -18,6 +18,9 @@
     <PackageReference Include="Microsoft.OpenApi" Version="1.6.14" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.8" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+    <None Include="libwkhtmltox.dll">
+    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

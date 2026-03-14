@@ -1,4 +1,4 @@
-@use '../../styles/variables.scss';
+@use '../../../styles/variables.scss';
 .documents-container{
     overflow: auto;
     padding: 2rem;
@@ -143,13 +143,16 @@
                     }
                     .edit-btn{
                         background-image: url(variables.$documents-page-edit-file-icon);
+                        cursor: pointer;
                     }
                     .share-btn{
                         background-image: url(variables.$documents-page-share-file-icon);
+                        cursor: pointer;
                     }
                     .delete-btn{
                         mask-image: url(variables.$documents-page-delete-file-icon);
                         background-color: red;
+                        cursor: pointer;
                     }
                     .icon:hover{
                         background-color: variables.$document-btn-icon-hvr-clr;

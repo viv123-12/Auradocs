@@ -1,4 +1,5 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output, Input, SimpleChanges, OnChanges } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { ChangeEvent, CKEditorModule } from '@ckeditor/ckeditor5-angular';
 
 import {
@@ -41,19 +42,26 @@ import {
 @Component({
   selector: 'app-document-editor',
   standalone: true,
-  imports: [CKEditorModule],
+  imports: [CKEditorModule, FormsModule],
   templateUrl: './document-editor.html',
   styleUrl: './document-editor.scss'
 })
-export class DocumentEditor {
+export class DocumentEditor implements OnChanges {
 
   public Editor = ClassicEditor;
-  public isReadOnly  = false;
-  public content = '';
+  @Input() isReadOnly  = false;
+  @Input() content: string = '';
   private editorInstance: any;
   @Output() ContentValueChanged = new EventEmitter<string>(); 
 
   constructor(){}
+
+  ngOnChanges(changes: SimpleChanges)
+  {
+    if (changes['isReadOnly']) {
+      this.applyReadOnlyState();
+    }
+  }
 
   public config = {
     licenseKey: 'GPL',
@@ -94,7 +102,6 @@ export class DocumentEditor {
       FindAndReplace,
       Autoformat,
       PasteFromOffice,
-      Markdown,
 
       FontFamily,
       FontColor,
@@ -170,6 +177,7 @@ export class DocumentEditor {
   onEditorValueChange(event:ChangeEvent<ClassicEditor>)
   {
     this.content = event.editor.getData();
+    console.log(this.content);
     this.ContentValueChanged.emit(this.content);
   }
 }
