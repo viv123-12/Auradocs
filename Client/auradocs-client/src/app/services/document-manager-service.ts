@@ -25,6 +25,21 @@ export interface UpdateDocumentRequest
   Content :string
 }
 
+export interface UploadFileRequest
+{
+  file?: File;
+  Title?: string;
+  FileType?:string;
+  DocumentType?:string;
+  FolderId?:string | null;
+}
+
+export interface DuplicateDocumentRequest
+{
+  documentId:string | null;
+  folderId: string | null;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -39,14 +54,37 @@ export class DocumentManagerService {
     }
   constructor(private api:HttpClientService){}
 
-  public getFolders():Observable<HttpResponse<any>>
+  public getFolders(folderId:string | null):Observable<HttpResponse<any>>
   {
-    return this.api.get(API_CONSTANTS.DOCUMENTS.GET_FOLDERS, this.options);
+    let param:any = {};
+    if(folderId)
+    {
+      param={
+        folderGuid: folderId
+      }
+    }
+    const options = {
+      ...this.options,
+      params: param
+    }
+    const URL = API_CONSTANTS.DOCUMENTS.GET_FOLDERS;
+    return this.api.get(URL, options);
   }
-  public getDocuments(folderId:string):Observable<HttpResponse<any>>
+  public getDocuments(folderId:string | null):Observable<HttpResponse<any>>
   {
-    const URL = API_CONSTANTS.DOCUMENTS.GET_FILES + `/${folderId}`;
-    return this.api.get(URL, this.options);
+   let param:any = {};
+    if(folderId)
+    {
+      param={
+        folderGuid: folderId
+      }
+    }
+    const options = {
+      ...this.options,
+      params: param
+    }
+    const URL = API_CONSTANTS.DOCUMENTS.GET_FILES;
+    return this.api.get(URL, options);
   }
 
   public getDocument(documentId:string):Observable<HttpResponse<any>>
@@ -71,10 +109,21 @@ export class DocumentManagerService {
     return this.api.put(API_CONSTANTS.DOCUMENTS.UPDATE_DOCUMENT, body, this.options);
   }
 
-  public duplicateDocument(documentId:string | null)
+  public duplicateDocument(duplicateDocument:DuplicateDocumentRequest)
   {
-    const URL = API_CONSTANTS.DOCUMENTS.DUPLICATE_DOCUMENT + `/${documentId}`;
-    return this.api.post(URL,null,this.options);
+    let param:any = {};
+    if(duplicateDocument.folderId)
+    {
+      param={
+        folderGuid: duplicateDocument.folderId
+      }
+    }
+    const options = {
+      ...this.options,
+      params: param
+    }
+    const URL = API_CONSTANTS.DOCUMENTS.DUPLICATE_DOCUMENT + `/${duplicateDocument.documentId}`;
+    return this.api.post(URL, null, options);
   }
 
   public deleteDocument(documentId:string)
@@ -98,5 +147,15 @@ export class DocumentManagerService {
   {
     const URL = API_CONSTANTS.DOCUMENTS.OPEN_FOLDER +  `/${folderId}`;
     return this.api.get(URL, this.options);
+  }
+  public uploadDocument(uploadFileRequest:FormData):Observable<HttpResponse<any>>
+  {
+    const { headers, ...restOptions } = this.options;
+    const uploadDocumentRequestOptions = {
+      ...restOptions,
+      reportProgress: true,
+      observe: 'events'
+    }
+    return this.api.post(API_CONSTANTS.DOCUMENTS.UPLOAD_DOCUMENT,uploadFileRequest,uploadDocumentRequestOptions);
   }
 }

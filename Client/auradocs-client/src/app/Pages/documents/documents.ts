@@ -5,8 +5,8 @@ import { Router, ActivatedRoute} from '@angular/router';
 import { Dropdown } from '../../components/dropdown/dropdown';
 import { Button } from '../../components/button/button';
 import { STRING_CONSTANTS } from '../../constants/string-constants';
-import { CreateFolderRequest, CreateNewDocumentRequest, DocumentManagerService } from '../../services/document-manager-service';
-import { DOCUMENT_EDIOR_MODES, DOCUMENT_SHARE_SCOPE_FILTER_OPTIONS, DOCUMENT_STATUS, DOCUMENT_STATUS_FILTER_OPTIONS, DOCUMENT_TYPES, DOCUMENT_TYPES_FILTER_OPTIONS, DropDownOptions, SHARE_SCOPE } from '../../constants/app-constants';
+import { CreateFolderRequest, CreateNewDocumentRequest, DocumentManagerService, UploadFileRequest } from '../../services/document-manager-service';
+import { DOCUMENT_EDIOR_MODES, DOCUMENT_SHARE_SCOPE_FILTER_OPTIONS, DOCUMENT_STATUS, DOCUMENT_STATUS_FILTER_OPTIONS, FILE_TYPES, DOCUMENT_TYPES_FILTER_OPTIONS, DropDownOptions, SHARE_SCOPE, DOCUMENT_TYPES } from '../../constants/app-constants';
 import { DocumentDetail } from '../../constants/Interfaces/DocumentDetail';
 import { DocumentStateService } from '../../services/document-state-service';
 import { AuradocsHelpler } from '../../constants/Hepler';
@@ -14,6 +14,7 @@ import { Popup } from "../../components/popup/popup";
 import { FolderDetail } from '../../constants/Interfaces/FolderDetail';
 import { resolve } from 'chart.js/helpers';
 import { FormsModule } from '@angular/forms';
+import { HttpEvent, HttpEventType } from '@angular/common/http';
 
 @Component({
   selector: 'app-documents',
@@ -32,7 +33,7 @@ export class Documents implements OnInit{
   public newFolderBtnClass:string = "new-folder-btn";
   public myFoldersSectionHeader:string = STRING_CONSTANTS.MY_FOLDER_SECTION_HEADING;
   public myDocumentsSectionHeader:string = STRING_CONSTANTS.MY_DOCUMENTS_SECTION_HEADING;
-  public docTypeDDList:DropDownOptions<DOCUMENT_TYPES>[] = DOCUMENT_TYPES_FILTER_OPTIONS;
+  public docTypeDDList:DropDownOptions<FILE_TYPES>[] = DOCUMENT_TYPES_FILTER_OPTIONS;
   public statusTypeDDList: DropDownOptions<DOCUMENT_STATUS>[] = DOCUMENT_STATUS_FILTER_OPTIONS;
   public OwnerTypeDDList:DropDownOptions<SHARE_SCOPE>[] = DOCUMENT_SHARE_SCOPE_FILTER_OPTIONS;
   public docTypeDDLabel:number = 0;
@@ -49,6 +50,15 @@ export class Documents implements OnInit{
   public openNewFolderPopup:boolean = false;
   public currentFolderId:string|null ='';
   public newFoldername:string='';
+
+  public UploadDocumentPopupHeader:string  = STRING_CONSTANTS.UPLOAD_FILE;
+  public openUploadFilePopup:boolean = false;
+  public uploadFileRequest:UploadFileRequest= {};
+  public uploadFileMetadatShow:boolean = false;
+  public uploadProgress:number = 0;
+  public isUploading:boolean = false;
+  public isUploadingFailed:boolean = false;
+
   public DocumentsSectionHeading:string = STRING_CONSTANTS.HOME_PAGE_TITLE;
   public createNewDocumentRequest:CreateNewDocumentRequest={
       title:'',
@@ -136,7 +146,7 @@ export class Documents implements OnInit{
   private getFoldersList():Promise<void>
   {
      return new Promise<void>((resolve, reject)=>{
-      this.documentManager.getFolders().subscribe({
+      this.documentManager.getFolders(this.currentFolderId).subscribe({
         next:
           res => {
             if(res.status == 200)
@@ -157,7 +167,7 @@ export class Documents implements OnInit{
   private getDocumentsList():Promise<void>
   {
     return new Promise<void>((resolve, reject)=>{
-      this.documentManager.getDocuments('').subscribe({
+      this.documentManager.getDocuments(this.currentFolderId).subscribe({
         next:
           res => {
             if(res.status == 200)
@@ -186,9 +196,10 @@ export class Documents implements OnInit{
           return;
         }
         AuradocsHelpler.ApiCallHelper(this.documentManager.getFolder.bind(this.documentManager),(res) => {
-          if(res.body)
+          if(res)
           {
-            this.currentFolderDetails = res.body;
+            this.currentFolderDetails = JSON.parse(res);
+            this.documentState.setCurrentFolderId(this.currentFolderDetails.folderId);
           }
           resolve();
         }
@@ -200,6 +211,15 @@ export class Documents implements OnInit{
   public OnClickFileTile(documentId:string)
   {
     this.router.navigate(['/document-editor', documentId, DOCUMENT_EDIOR_MODES.READ]);
+  }
+  public async OnClickFolderTile(folderId:string)
+  {
+    this.currentFolderId = folderId;
+    await this.getFolderDetails();
+    this.router.navigate(['/documents', this.currentFolderDetails.folderId])
+    await this.getFoldersList();
+    await this.getDocumentsList();
+    
   }
   public onClickDelete(event:MouseEvent, documentId:string)
   {
@@ -239,5 +259,80 @@ export class Documents implements OnInit{
     this.createNewFolder();
     this.getFoldersList(); 
     this.openNewFolderPopup = false;
+  }
+
+  public onClickUploadDocument()
+  {
+    this.openUploadFilePopup = true;
+  }
+
+  public onClickUploadDocumentBtn()
+  {
+    this.isUploading = true;
+    const uploadFormData = this.buildFormData();
+    this.documentManager.uploadDocument(uploadFormData).subscribe(
+      {
+        next:
+          (event:HttpEvent<any>) => {
+            switch (event.type)
+            {
+              case HttpEventType.UploadProgress:
+                if (event.total) {
+                  this.uploadProgress = Math.round((100 * event.loaded) / event.total);
+                }
+                break;
+              case HttpEventType.Response:
+                this.isUploading = false;
+                this.openUploadFilePopup = false;
+                this.getDocumentsList();
+                break;
+            }
+          },
+        error:
+          (error) =>{
+            this.isUploading = false;
+            this.isUploadingFailed = true;
+            console.error(error);
+          }
+      }
+    )
+  }
+
+  public onClickCloseUploadDocumentPopup()
+  {
+    this.openUploadFilePopup = false;
+  }
+
+  public onFileSelected(event:Event)
+  {
+    const inputFiles = event.target as HTMLInputElement;
+    if(!inputFiles.files || inputFiles.files.length == 0)
+    {
+      return;
+    }
+
+    const file = inputFiles.files[0];
+
+    this.uploadFileRequest.file = file;
+    this.uploadFileRequest.Title = file.name;
+    this.uploadFileRequest.FileType = file.type;
+    this.uploadFileRequest.DocumentType = DOCUMENT_TYPES[2];
+    this.uploadFileRequest.FolderId = this.currentFolderId;
+
+    this.uploadFileMetadatShow = true;
+  }
+
+  private buildFormData():FormData
+  {
+    const formData = new FormData();
+    this.uploadFileRequest.file && formData.append('File', this.uploadFileRequest.file);
+    this.uploadFileRequest.Title && formData.append('Title', this.uploadFileRequest.Title);
+    this.uploadFileRequest.FileType && formData.append('Filetype', this.uploadFileRequest.FileType);
+    this.uploadFileRequest.DocumentType && formData.append('DocumentType', this.uploadFileRequest.DocumentType);
+    if(this.uploadFileRequest.FolderId)
+    {
+      formData.append('FolderId', this.uploadFileRequest.FolderId);
+    }
+    return formData;
   }
 }

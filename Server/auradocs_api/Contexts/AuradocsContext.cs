@@ -161,7 +161,10 @@ public class AuradocsContext : DbContext
             entity.HasKey(e => e.uId);
             entity.Property(e => e.strGuid).HasColumnName("strGuid");
             entity.Property(e => e.strTitle).HasColumnName("strTitle");
+            entity.Property(e => e.uDocumentType).HasColumnName("uDocumentType");
             entity.Property(e => e.strContent).HasColumnName("strContent");
+            entity.Property(e => e.strFileUrl).HasColumnName("strFileUrl");
+            entity.Property(e => e.strFileType).HasColumnName("strFileType");
             entity.Property(e => e.uStatusId).HasColumnName("uStatusId");
             entity.Property(e => e.uCurrentVersionId).HasColumnName("uCurrentVersionId");
             entity.Property(e => e.uCreatedBy).HasColumnName("uCreatedBy");

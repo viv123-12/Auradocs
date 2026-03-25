@@ -1,10 +1,14 @@
 <div class="documents-container">
     <div class="documents-page-header">
-        <h1>{{  currentFolderDetails.folderTitle }}</h1>
+        <h1>{{ currentFolderDetails.folderTitle }}</h1>
         <div class="header-buttons-container">
-            <app-button [btnClass]="newBtnClass" [iconClass]="newBtnIconClass" [isIcon]="true" [buttonTitle]="newBtnTitle" [buttonInnerText]="newBtnTitle" (click)="createNewDocument()"></app-button>
-            <app-button [btnClass]="uploadBtnClass" [iconClass]="uploadBtnIconClass" [isIcon]="true" [buttonTitle]="uploadTitle" [buttonInnerText]="uploadTitle"></app-button>
-            <app-button [btnClass]="newFolderBtnClass" [buttonTitle]="newFolderTitle" [isIcon]="true" [buttonInnerText]="newFolderTitle" (click)="onClickNewFolderBtn()"></app-button>
+            <app-button [btnClass]="newBtnClass" [iconClass]="newBtnIconClass" [isIcon]="true"
+                [buttonTitle]="newBtnTitle" [buttonInnerText]="newBtnTitle" (click)="createNewDocument()"></app-button>
+            <app-button [btnClass]="uploadBtnClass" [iconClass]="uploadBtnIconClass" [isIcon]="true"
+                [buttonTitle]="uploadTitle" [buttonInnerText]="uploadTitle"
+                (click)="onClickUploadDocument()"></app-button>
+            <app-button [btnClass]="newFolderBtnClass" [buttonTitle]="newFolderTitle" [isIcon]="true"
+                [buttonInnerText]="newFolderTitle" (click)="onClickNewFolderBtn()"></app-button>
         </div>
     </div>
     <div class="filter-container">
@@ -17,45 +21,87 @@
     <div class="folders-container">
         <h2>{{myFoldersSectionHeader}}</h2>
         <div class="folder-tiles-container" [class.folder-tiles-not-available]="folderList.length == 0">
-            <div class="folder-tile" *ngFor="let folder of folderList"><span class="folder-tile-icon"></span>{{folder.folderTitle}}</div>
+            <div class="folder-tile" *ngFor="let folder of folderList" (click)="OnClickFolderTile(folder.folderId)"><span
+                    class="folder-tile-icon"></span>{{folder.folderTitle}}</div>
             <div *ngIf="folderList.length == 0" class="not-available"> No Folders found!!</div>
         </div>
     </div>
     <div class="files-container">
         <h2>{{myDocumentsSectionHeader}}</h2>
-        <div class="file-tiles-container" [class.file-tiles-not-available]="documentsList.length == 0" >
-            <div class="file-tile" *ngFor="let document of documentsList;let i=index"  (click)="OnClickFileTile(document.documentId)">
+        <div class="file-tiles-container" [class.file-tiles-not-available]="documentsList.length == 0">
+            <div class="file-tile" *ngFor="let document of documentsList;let i=index"
+                (click)="OnClickFileTile(document.documentId)">
                 <div class="name-container"><span class="file-tile-icon"></span>{{document.documentTitle}}</div>
-                <div class="type-auth-status-container"><span>{{document.documentState}}</span><span class="type-auth-status-seperator">.</span><span>{{document.createdBy}}</span>
-                <div class="btn-container">
-                    <span class="edit-btn icon" (click)="onClickEditFile($event, document.documentId)"></span>
-                    <span class="share-btn icon" (click)="onClickSharePoupOpen($event,document.documentId)"></span>
-                    <span class="delete-btn icon" (click)="onClickDelete($event, document.documentId)"></span>
+                <div class="type-auth-status-container"><span>{{document.documentState}}</span><span
+                        class="type-auth-status-seperator">.</span><span>{{document.createdBy}}</span>
+                    <div class="btn-container">
+                        <span class="edit-btn icon" (click)="onClickEditFile($event, document.documentId)"></span>
+                        <span class="share-btn icon" (click)="onClickSharePoupOpen($event,document.documentId)"></span>
+                        <span class="delete-btn icon" (click)="onClickDelete($event, document.documentId)"></span>
+                    </div>
                 </div>
             </div>
-            <div *ngIf="documentsList.length == 0" class="not-available"> No Documents found!!</div>
+            @if(documentsList.length == 0){
+            <div class="not-available"> No Documents found!!</div>
+            }
         </div>
     </div>
-</div>
 
 
-<app-popup [title]="DeleteDocumentPopupHeader" [isOpen]="openDeletePopup" (closePopup)="onClickCloseDeletePopup()" (ConfimAction)="onClickDeletePopupConfirmBtn()">
-    <p>Are you sure you want to delete this document?</p>    
-</app-popup>
+    <app-popup [title]="DeleteDocumentPopupHeader" [isOpen]="openDeletePopup" (closePopup)="onClickCloseDeletePopup()"
+        (ConfimAction)="onClickDeletePopupConfirmBtn()">
+        <p>Are you sure you want to delete this document?</p>
+    </app-popup>
 
-<app-popup [title]="NewFolderPopupHeader" [isOpen]="openNewFolderPopup" (closePopup)="onClickCloseNewFolderPopup()" (ConfimAction)="onClickCreateFolderConfimBtn()">
-    <div class="mb-3">
-    <label for="folderName" class="form-label">Folder Name</label>
-    <input
-      id="folderName"
-      type="text"
-      class="form-control"
-      placeholder="Enter folder name"
-      [(ngModel)]="newFoldername"
-    />
-  </div>
+    <app-popup [title]="NewFolderPopupHeader" [isOpen]="openNewFolderPopup" (closePopup)="onClickCloseNewFolderPopup()"
+        (ConfimAction)="onClickCreateFolderConfimBtn()">
+        <div class="mb-3">
+            <label for="folderName" class="form-label">Folder Name</label>
+            <input id="folderName" type="text" class="form-control" placeholder="Enter folder name"
+                [(ngModel)]="newFoldername" />
+        </div>
 
-  <div class="text-muted small">
-    Folder names help organize and manage your documents efficiently.
-  </div>
-</app-popup>
+        <div class="text-muted small">
+            Folder names help organize and manage your documents efficiently.
+        </div>
+    </app-popup>
+
+    <app-popup [title]="UploadDocumentPopupHeader" [isOpen]="openUploadFilePopup" (closePopup)="onClickCloseUploadDocumentPopup()"
+        (ConfimAction)="onClickUploadDocumentBtn()">
+        <div class="modal-body">
+            <!-- Drag & Drop -->
+            <div class="drop-zone" (click)="fileInput.click()">
+                <p>📁 Drag & Drop files here</p>
+                <span>or click to browse</span>
+                <input type="file" hidden multiple (change)="onFileSelected($event)" #fileInput/>
+            </div>
+            <!-- Upload file MeTa data-->   
+            @if(uploadFileMetadatShow){
+            <div class="file-metadata">
+                <!-- File List -->
+                <ul class="file-list">
+                    <li>
+                        <span>{{uploadFileRequest.Title }}</span>
+                        <span class="status success">Uploaded</span>
+                    </li>
+                </ul>
+
+                <!-- Metadata -->
+                <div class="form-group">
+                    <label>File Name</label>
+                    <input type="text" placeholder="Enter file name" [(ngModel)]="uploadFileRequest.Title" />
+                </div>
+
+                <!-- Progress -->
+                <div class="progress-container">
+                    <div class="progress-bar" [style.width.%]="uploadProgress"></div>
+                </div>
+                <p class="progress-text">Uploading... {{uploadProgress}}%</p>
+                @if (isUploadingFailed) {
+                    <span class="status error">Error while uploading.</span>
+                }
+
+            </div>
+            }
+        </div>
+    </app-popup>

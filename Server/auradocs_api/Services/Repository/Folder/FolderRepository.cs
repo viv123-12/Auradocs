@@ -9,9 +9,9 @@ public class FolderRepository: IFolderRepository
     {
         _auradocsContext = auradocsContext;
     }
-    public async Task<Folder> GetFolderUsingId(string id)
+    public async Task<Folder> GetActiveFolderUsingId(string id)
     {
-        return await _auradocsContext.Folders.Where(f => f.strGuid == id).FirstOrDefaultAsync();
+        return await _auradocsContext.Folders.Where(f => f.strGuid == id && !f.boolIsDeleted).FirstOrDefaultAsync();
     }
 
     public async Task<Folder> GetFolderUsingTitle(string title)

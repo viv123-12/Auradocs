@@ -25,6 +25,7 @@ export const API_CONSTANTS =
         UPDATE_DOCUMENT: `${LOCAL_ENVIRONEMNT}/DocumentManager/document`,
         DUPLICATE_DOCUMENT:`${LOCAL_ENVIRONEMNT}/DocumentManager/duplicate-document`,
         DELETE_DOCUMENT:`${LOCAL_ENVIRONEMNT}/DocumentManager/document`,
-        DOWNLOAD_DOCUMENT:`${LOCAL_ENVIRONEMNT}/DocumentManager/download-document`
+        DOWNLOAD_DOCUMENT:`${LOCAL_ENVIRONEMNT}/DocumentManager/download-document`,
+        UPLOAD_DOCUMENT:`${LOCAL_ENVIRONEMNT}/DocumentManager/upload-document`
     }
 }

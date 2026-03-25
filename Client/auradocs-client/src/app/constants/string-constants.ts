@@ -10,7 +10,8 @@ export const STRING_CONSTANTS = {
     BACK_TO_LOGIN:"Back to Login",
     SEARCH_DOCUMENT_PLACEHOLDER:"Search Documents",
     DELETE_POPUP:"Delete Document",
-    NEW_FOLDER:"New Folder"
+    NEW_FOLDER:"New Folder",
+    UPLOAD_FILE: "Upload File"
 }
 
 export const AURADOCS_BUTTON_CLASSES = {

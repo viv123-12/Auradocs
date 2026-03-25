@@ -1,6 +1,6 @@
 public interface IFolderRepository
 {
-    public Task<Folder> GetFolderUsingId(string id);
+    public Task<Folder> GetActiveFolderUsingId(string id);
     public Task<Folder> GetFolderUsingTitle(string title);
     public Task<List<Folder>> GetActivatedFoldersAsync(int userId);
     public Task<List<FolderResponse>> ListOrphanFoldersAsync(int userId);

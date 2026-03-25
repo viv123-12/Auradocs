@@ -7,7 +7,7 @@ export class AuradocsHelpler{
     {
         EndpointFunctionCall(body).subscribe({
           next:
-            res => {
+            (res) => {
               if (res.status == 200){
                 onSuccess(res.body);
               }

@@ -23,26 +23,46 @@ public class DocumentRepository: IDocumentRepository
                                         .ToListAsync();
     }
 
-    public async Task<List<DocumentResponse>> ListAllActiveDocumentsOfFolderAsync(List<int> documentIdList, int userId)
+    public async Task<List<DocumentResponse>> ListAllActiveDocumentsOfFolderAsync(List<int> documentIdList, int userId, GetDocumentsListDto getDocumentsListDto)
     {
-        List<Document> documents = await _auradocsContext.Documents
+        IQueryable<Document> documents =  _auradocsContext.Documents
                                                 .Where(e => documentIdList.Contains(e.uId) 
                                                     && e.uOwnerUserId == userId 
-                                                    && !e.boolIsDeleted)
-                                                .ToListAsync();
+                                                    && !e.boolIsDeleted);
+        if(!string.IsNullOrWhiteSpace(getDocumentsListDto.searchValue))
+        {
+             documents = documents.Where(d => EF.Functions.Like(d.strTitle,$"%{getDocumentsListDto.searchValue}%"));
+        }
+        
+        if (getDocumentsListDto?.DocumentType != null)
+        {
+            documents = documents.Where(d => d.uDocumentType == getDocumentsListDto.DocumentType);
+        }
 
-        DocumentResponse[] documentResponses = await Task.WhenAll(
-            documents.Select(async e => new DocumentResponse
-            {
-                documentId = e.strGuid,
-                documentTitle = e.strTitle,
-                documentContent = e.strContent,
-                documentState = CommonHelper.GetDocumentState(e.uStatusId),
-                currentDocumentVersion = e.uCurrentVersionId
-            })
-        );
-        return documentResponses.ToList();
+        if (getDocumentsListDto?.DocumentStatus != null)
+        {
+            documents = documents.Where(d => d.uDocumentType == getDocumentsListDto.DocumentType);
+        }
 
+        if (getDocumentsListDto?.DocumentStatus != null)
+        {
+            documents = documents.Where(d => d.uDocumentType == getDocumentsListDto.DocumentStatus);
+        }
+
+        if (getDocumentsListDto?.CreatedOn != null)
+        {
+            var createOn = getDocumentsListDto.CreatedOn.Value.Date;
+            documents = documents.Where(d => d.dtCreatedOn.Date == createOn);
+        }
+        List<DocumentResponse> documentResponses = documents.Select(e => new DocumentResponse
+        {
+            documentId = e.strGuid,
+            documentTitle = e.strTitle,
+            documentContent = e.strContent,
+            documentState = CommonHelper.GetDocumentState(e.uStatusId),
+            currentDocumentVersion = e.uCurrentVersionId
+        }).ToList();
+        return documentResponses;
     }
 
     public async Task<Document> GetDocumentUsingIdAsync(string documentId)
@@ -61,20 +81,46 @@ public class DocumentRepository: IDocumentRepository
         await _auradocsContext.SaveChangesAsync();
     }
 
-    public async Task<List<DocumentResponse>> ListOrphenDocumentsAsync(int userId)
+    public async Task<List<DocumentResponse>> ListOrphenDocumentsAsync(int userId, GetDocumentsListDto getDocumentsListDto)
     {
-        List<DocumentResponse> listOrphanFolder = await (from d in _auradocsContext.Documents
-                                                        join df in _auradocsContext.DocumentFolders
-                                                        on d.uId equals df.uDocumentId into folderGroup
-                                                        from fg in folderGroup.DefaultIfEmpty()
-                                                        where fg == null && !d.boolIsDeleted
-                                                        select  new DocumentResponse{
-                                                            documentId = d.strGuid,
-                                                            documentTitle = d.strTitle,
-                                                            documentContent = d.strContent,
-                                                            documentState = CommonHelper.GetDocumentState(d.uStatusId),
-                                                            currentDocumentVersion = d.uCurrentVersionId
-                                                        }).ToListAsync();
-        return listOrphanFolder;                                             
+        IQueryable<Document> OrphanDocuments =  from d in _auradocsContext.Documents
+                                                join df in _auradocsContext.DocumentFolders
+                                                on d.uId equals df.uDocumentId into folderGroup
+                                                from fg in folderGroup.DefaultIfEmpty()
+                                                where fg == null && !d.boolIsDeleted
+                                                select d;
+        if(!string.IsNullOrWhiteSpace(getDocumentsListDto.searchValue))
+        {
+        OrphanDocuments = OrphanDocuments.Where(d => EF.Functions.Like(d.strTitle,$"%{getDocumentsListDto.searchValue}%"));    
+        }
+
+        if (getDocumentsListDto.DocumentType != null)
+        {
+            OrphanDocuments = OrphanDocuments.Where(d => d.uDocumentType == getDocumentsListDto.DocumentType);
+        }
+
+        if (getDocumentsListDto.DocumentStatus != null)
+        {
+            OrphanDocuments = OrphanDocuments.Where(d => d.uDocumentType == getDocumentsListDto.DocumentType);
+        }
+
+        if (getDocumentsListDto.DocumentStatus != null)
+        {
+            OrphanDocuments = OrphanDocuments.Where(d => d.uDocumentType == getDocumentsListDto.DocumentStatus);
+        }
+
+        if (getDocumentsListDto.CreatedOn != null)
+        {
+            OrphanDocuments = OrphanDocuments.Where(d => d.dtCreatedOn.Date == getDocumentsListDto.CreatedOn);
+        }
+        List<DocumentResponse> listOrphanDocument = OrphanDocuments.Select(e => new DocumentResponse
+        {
+            documentId = e.strGuid,
+            documentTitle = e.strTitle,
+            documentContent = e.strContent,
+            documentState = CommonHelper.GetDocumentState(e.uStatusId),
+            currentDocumentVersion = e.uCurrentVersionId
+        }).ToList();
+        return listOrphanDocument;                                          
     }
 }

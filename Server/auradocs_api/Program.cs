@@ -13,6 +13,8 @@ using auradocs_api;
 using DinkToPdf.Contracts;
 using DinkToPdf;
 using auradocs_api.Data;
+using Amazon.S3;
+using Microsoft.Extensions.Options;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -43,11 +45,16 @@ builder.Services
 builder.Services.AddAuthorization();
 builder.Services.AddHttpClient();
 builder.Services.AddSingleton<JWTService>();
+
+//config section
 builder.Services.Configure<EmailSettings>(
     builder.Configuration.GetSection("EmailSettings")
 );
 builder.Services.Configure<LLMSettings>(
     builder.Configuration.GetSection("LLMSettings")
+);
+builder.Services.Configure<MinIoStorageServiceSettings>(
+    builder.Configuration.GetSection("MinIoStorageServiceSettings")
 );
 
 builder.Services.AddScoped<IEmailService, EmailService>();
@@ -56,6 +63,18 @@ context.LoadUnmanagedLibrary(Path.Combine(Directory.GetCurrentDirectory(), "libw
 builder.Services.AddSingleton<IConverter>(
     new SynchronizedConverter(new PdfTools())
 );
+
+builder.Services.AddSingleton<IAmazonS3>(sp =>
+{
+    MinIoStorageServiceSettings minIoSettings = sp.GetRequiredService<IOptions<MinIoStorageServiceSettings>>().Value;
+    AmazonS3Config config = new AmazonS3Config
+    {
+        ServiceURL = minIoSettings.ServiceUrl,
+        ForcePathStyle = true
+    };
+    return new AmazonS3Client(minIoSettings.AwsAccessKeyId, minIoSettings.AwsSecretAccessKey, config);
+});
+builder.Services.AddScoped<IStorageService, MinIoStorageService>();
 builder.Services.AddScoped<IConvertFileService, ConvertHtmlToPdf>();
 builder.Services.AddScoped<IAIService,AIService>();
 builder.Services.AddScoped<ILLMClients, OpenAiClient>();

@@ -15,4 +15,11 @@ public class DocumentSharerdWithUsersRepository: IDocumentSharedWithUsersReposit
                                                     .FirstOrDefaultAsync();
         return documentShared;
     }
+
+    public async Task<bool> AddDocumentSharedWithUserAsync(DocumentSharedWithUser documentSharedWithUser)
+    {
+        _auradocsContext.Add(documentSharedWithUser);
+        await _auradocsContext.SaveChangesAsync();
+        return true;
+    }
 }

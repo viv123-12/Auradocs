@@ -11,11 +11,17 @@ export enum DOCUMENT_EDIOR_MODES
     EDIT = 'edit'
 }
 
-export enum DOCUMENT_TYPES
+export enum FILE_TYPES
 {
     ALL  = 0,
     PDF = 1,
     DOC = 2
+}
+
+export enum DOCUMENT_TYPES
+{
+  EDITOR = 1,
+  FILE= 2
 }
 
 export enum DOCUMENT_STATUS
@@ -45,10 +51,10 @@ export const DOCUMENT_STATUS_FILTER_OPTIONS: DropDownOptions<DOCUMENT_STATUS>[] 
   { label: 'Archieved', value: DOCUMENT_STATUS.ARCHIEVED}
 ]
 
-export const DOCUMENT_TYPES_FILTER_OPTIONS: DropDownOptions<DOCUMENT_TYPES>[] = [
-  { label: 'All', value: DOCUMENT_TYPES.ALL },
-  { label: 'Pdf', value: DOCUMENT_TYPES.PDF },
-  { label: 'Doc', value: DOCUMENT_TYPES.DOC }
+export const DOCUMENT_TYPES_FILTER_OPTIONS: DropDownOptions<FILE_TYPES>[] = [
+  { label: 'All', value: FILE_TYPES.ALL },
+  { label: 'Pdf', value: FILE_TYPES.PDF },
+  { label: 'Doc', value: FILE_TYPES.DOC }
 ]
 
 export const DOCUMENT_SHARE_SCOPE_FILTER_OPTIONS: DropDownOptions<SHARE_SCOPE>[] = [

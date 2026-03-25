@@ -8,5 +8,4 @@ public class Folder
     public bool boolIsDeleted { get; set; } = false;
     public int uCreatedBy { get; set; }
     public DateTime dtCreatedOn { get; set; }
-
 }

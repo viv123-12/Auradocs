@@ -22,19 +22,19 @@ public class DocumentManagerController : ControllerBase
     }
 
     [HttpGet("documents")]
-    public async Task<IActionResult> GetDocumentListAsync(string? folderGuid)
+    public async Task<IActionResult> GetDocumentListAsync( [FromQuery] GetDocumentsListDto? getDocumentsListDto,string? folderGuid = null)
     {
         User user = await _userInformationService.GetUserInformation();
         if(user == null)
         {
             return Unauthorized();
         }
-        List<DocumentResponse> documents  = await _documentService.GetDocumentListAsync(user.uUid, folderGuid);
+        List<DocumentResponse> documents  = await _documentService.GetDocumentListAsync(user.uUid, folderGuid, getDocumentsListDto);
         return Ok(documents);
     }
 
     [HttpGet("folders")]
-    public async Task<IActionResult> GetFolderListAsync(string? folderGuid)
+    public async Task<IActionResult> GetFolderListAsync(string? folderGuid = null)
     {
         User user = await _userInformationService.GetUserInformation();
         if(user == null)
@@ -96,14 +96,14 @@ public class DocumentManagerController : ControllerBase
     }
 
     [HttpDelete("document/{documentId}")]
-    public async Task<IActionResult> DeleteDocumentAsync(string documentId)
+    public async Task<IActionResult> DeleteDocumentAsync(string documentId, string? folderId = null)
     {
         User user = await _userInformationService.GetUserInformation();
         if (user == null)
         {
             return Unauthorized();
         }
-        if (!await _documentService.DeleteDocumentAsync(documentId))
+        if (!await _documentService.DeleteDocumentAsync(documentId, folderId))
         {
             return BadRequest();
         }
@@ -137,7 +137,7 @@ public class DocumentManagerController : ControllerBase
     }
 
     [HttpPost("duplicate-document/{documentId}")]
-    public async Task<IActionResult> DuplicateDocumentAsync(string documentId)
+    public async Task<IActionResult> DuplicateDocumentAsync(string documentId, [FromQuery] string folderGuid)
     {
         User user = await _userInformationService.GetUserInformation();
         if (user == null)
@@ -145,7 +145,7 @@ public class DocumentManagerController : ControllerBase
             return Unauthorized();
         }
 
-        if (!await _documentService.DuplicateDocumentAsync(user.uUid, documentId))
+        if (!await _documentService.DuplicateDocumentAsync(user.uUid, documentId, folderGuid))
         {
             return BadRequest();
         }
@@ -160,7 +160,6 @@ public class DocumentManagerController : ControllerBase
         {
             return Unauthorized();
         }
-
         if(!await _documentService.ShareDocumentAsync(user.uUid, shareDocument))
         {
             return BadRequest();
@@ -220,5 +219,20 @@ public class DocumentManagerController : ControllerBase
 
         string llmResponse = await _aiService.TranslateAsync(documentEditorTextRequest.SelectedText, documentEditorTextRequest.Language);
         return Ok(llmResponse);
+    }
+
+    [HttpPost("upload-document")]
+    public async Task<IActionResult> UploadDocumentAsync(UploadDocumentDto uploadDocumentDto)
+    {
+        User user = await _userInformationService.GetUserInformation();
+        if (user == null)
+        {
+            return Unauthorized();
+        }
+        if(!await _documentService.UploadDocumentToFolderAsync(user.uUid, uploadDocumentDto))
+        {
+            return StatusCode(500);
+        }
+        return Ok();
     }
 }

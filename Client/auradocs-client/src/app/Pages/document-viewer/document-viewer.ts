@@ -4,10 +4,11 @@ import { CommonModule } from '@angular/common';
 import { DocumentEditor } from '../document-editor/document-editor';
 import { ActivatedRoute, Router } from '@angular/router';
 import { STRING_CONSTANTS } from '../../constants/string-constants';
-import { DocumentManagerService, UpdateDocumentRequest } from '../../services/document-manager-service';
+import { DocumentManagerService, DuplicateDocumentRequest, UpdateDocumentRequest } from '../../services/document-manager-service';
 import { AuradocsHelpler } from '../../constants/Hepler';
 import { DocumentDetail } from '../../constants/Interfaces/DocumentDetail';
 import { DOCUMENT_EDIOR_MODES } from '../../constants/app-constants';
+import { DocumentStateService } from '../../services/document-state-service';
 
 @Component({
   selector: 'app-document-viewer',
@@ -63,7 +64,12 @@ export class DocumentViewer implements OnInit{
       Content:''
   }
 
-  public constructor(private router:Router, public documentManager:DocumentManagerService, private activatedRoute:ActivatedRoute, private cdr: ChangeDetectorRef){
+  public duplicateDocument:DuplicateDocumentRequest = {
+    documentId:'',
+    folderId:''
+  }
+
+  public constructor(private router:Router, public documentManager:DocumentManagerService, private documentState: DocumentStateService, private activatedRoute:ActivatedRoute, private cdr: ChangeDetectorRef){
   }
   ngOnInit(): void {
     this.activatedRoute.paramMap.subscribe((param)=>{
@@ -86,7 +92,7 @@ export class DocumentViewer implements OnInit{
 
   public onBackButtonClick()
   {
-    this.router.navigate(['/documents'])
+    this.router.navigate(['/documents', this.documentState.getCurrentFolderId()])
   }
 
   public onContentChange(editorContent:string)
@@ -113,12 +119,11 @@ export class DocumentViewer implements OnInit{
   }
   public onDuplicateBtnClicked()
   {
-    AuradocsHelpler.ApiCallHelper(this.documentManager.duplicateDocument.bind(this.documentManager), () => {
-      console.log("Document Duplicated")
-    },()=>{
-      
-    },this.documentId);
-    this.router.navigate(['/documents'])
+    this.duplicateDocument.documentId = this.documentId;
+    this.duplicateDocument.folderId = this.documentState.getCurrentFolderId();
+    AuradocsHelpler.ApiCallHelper(this.documentManager.duplicateDocument.bind(this.documentManager),() => {}
+    ,()=>{},this.duplicateDocument);
+    this.router.navigate(['/documents', this.documentState.getCurrentFolderId()])
   }
   public onClickEditBtn()
   {
